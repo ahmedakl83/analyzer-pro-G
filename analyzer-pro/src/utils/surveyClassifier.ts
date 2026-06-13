@@ -101,7 +101,7 @@ function hasCommonPrefix(headers: string[]): boolean {
  * يُنظّف اسم المجموعة من الفواصل والمسافات الزائدة في النهاية
  */
 function cleanGroupName(prefix: string): string {
-  return prefix.replace(/[\s\-–:،,]+$/, '').trim();
+  return prefix.replace(/[\s\-–:،,\[\(]+$/, '').trim();
 }
 
 // ─── Main Classifier ──────────────────────────────────────────────────────────
@@ -137,16 +137,13 @@ export function classifySurveyHeaders(headers: string[]): ClassificationResult {
   // نبحث عن أول موضع تبدأ فيه مجموعة ليكرت (3+ أسئلة بنفس البادئة)
   let demoEndIndex = -1; // -1 يعني لا توجد أسئلة ديموغرافية
 
+
+
   // فحص كل موضع محتمل لبداية مجموعة ليكرت
   let firstGroupStart = n; // افتراضياً لا توجد مجموعات
-  const PAIRED_PATTERN = /^(.+?)\s*[\[(](.+?)[\])]$/;
 
   for (let i = 0; i <= n - MIN_GROUP_SIZE; i++) {
     const window = headers.slice(i, i + MIN_GROUP_SIZE);
-    
-    // إذا كانت الأسئلة تتبع نمط الأقواس (مقارنة/ديموغرافية مدمجة)، نتخطاها من تصنيف ليكرت
-    const isPairedPattern = window.every(h => PAIRED_PATTERN.test(h));
-    if (isPairedPattern) continue;
 
     if (hasCommonPrefix(window)) {
       firstGroupStart = i;
@@ -170,12 +167,6 @@ export function classifySurveyHeaders(headers: string[]): ClassificationResult {
 
     // اختبر نافذة البداية
     const startWindow = headers.slice(cursor, cursor + MIN_GROUP_SIZE);
-    
-    // تخطي إذا كانت تتبع نمط الأقواس (ديموغرافية مدمجة)
-    if (startWindow.every(h => PAIRED_PATTERN.test(h))) {
-      cursor++;
-      continue;
-    }
 
     if (!hasCommonPrefix(startWindow)) {
       // لا بادئة مشتركة → هذا السؤال لا ينتمي لمجموعة، تخطَّه
@@ -183,14 +174,13 @@ export function classifySurveyHeaders(headers: string[]): ClassificationResult {
       continue;
     }
 
-    // وُجدت بادئة → امتد للأمام ما دام السؤال التالي يشارك نفس البادئة
+    // وُجدت بادئة → امتد للأمام ما دام السؤال التالي يبدأ بنفس البادئة تماماً
     const groupPrefix = commonPrefixOfGroup(startWindow);
     let groupEnd = cursor + MIN_GROUP_SIZE - 1;
 
     while (groupEnd + 1 < n) {
       const next = headers[groupEnd + 1];
-      const extendedPrefix = longestCommonPrefix(groupPrefix, next);
-      if (extendedPrefix.length >= MIN_PREFIX_LENGTH) {
+      if (next.startsWith(groupPrefix)) {
         groupEnd++;
       } else {
         break;

@@ -16,6 +16,8 @@ export function analyzeDemographics(
   const multiSet = new Set(range.multiChoiceQuestions || []);
 
   for (let i = range.startIndex; i <= range.endIndex; i++) {
+    if (range.ignoredQuestions?.includes(i)) continue;
+
     const question = surveyData.headers[i];
     const answers: Record<string, number> = {};
     const isMulti = multiSet.has(i);
@@ -107,12 +109,18 @@ interface PairedGroup {
 export function detectPairedQuestions(
   headers: string[],
   startIndex: number,
-  endIndex: number
+  endIndex: number,
+  ignoredQuestions: number[] = []
 ): PairedGroup[] {
   const groups: PairedGroup[] = [];
   let i = startIndex;
 
   while (i <= endIndex) {
+    if (ignoredQuestions.includes(i)) {
+      i++;
+      continue;
+    }
+
     const header = headers[i];
     const match = PAIRED_PATTERN.exec(header);
 
@@ -131,6 +139,10 @@ export function detectPairedQuestions(
     // امتد للأمام ما دام التالي يشارك نفس القاعدة
     let j = i + 1;
     while (j <= endIndex) {
+      if (ignoredQuestions.includes(j)) {
+        j++;
+        continue;
+      }
       const nextMatch = PAIRED_PATTERN.exec(headers[j]);
       if (nextMatch && nextMatch[1].trim() === base) {
         columnIndices.push(j);

@@ -10,6 +10,7 @@ export default function DemographicReview() {
   
   const [orders, setOrders] = useState<Record<number, string[]>>(demographicRange?.customAnswerOrders ?? {});
   const [newAnswers, setNewAnswers] = useState<Record<number, string>>({});
+  const [ignored, setIgnored] = useState<number[]>(demographicRange?.ignoredQuestions || []);
 
   // Initialize orders for all questions if not already present
   useEffect(() => {
@@ -104,12 +105,12 @@ export default function DemographicReview() {
   const handleBack = () => dispatch({ type: 'SET_STEP', payload: 'configure' });
 
   const handleNext = () => {
-    const updatedRange = { ...demographicRange!, customAnswerOrders: orders };
+    const updatedRange = { ...demographicRange!, customAnswerOrders: orders, ignoredQuestions: ignored };
     dispatch({ type: 'SET_DEMOGRAPHIC_RANGE', payload: updatedRange });
     
     if (state.likertGroups.length === 0) {
       // Analysis directly
-      const pairedGroups = detectPairedQuestions(surveyData!.headers, updatedRange.startIndex, updatedRange.endIndex);
+      const pairedGroups = detectPairedQuestions(surveyData!.headers, updatedRange.startIndex, updatedRange.endIndex, updatedRange.ignoredQuestions);
       const pairedResults = analyzePairedDemographics(surveyData!, pairedGroups);
       const pairedIndices = getPairedColumnIndices(pairedGroups);
       dispatch({ type: 'SET_PAIRED_DEMOGRAPHIC_RESULTS', payload: pairedResults });
@@ -143,12 +144,23 @@ export default function DemographicReview() {
           {surveyData.headers.slice(demographicRange.startIndex, demographicRange.endIndex + 1).map((header, idx) => {
             const absoluteIdx = demographicRange.startIndex + idx;
             if (state.isGroupSurvey && state.groupUserIdColumnIndex === absoluteIdx) return null;
+            if (ignored.includes(absoluteIdx)) return null;
             const currentOrder = orders[absoluteIdx] || [];
             return (
               <div key={absoluteIdx} className="config-section" style={{ padding: '1.5rem' }}>
-                <h4 style={{ marginBottom: '1rem', color: 'var(--primary-300)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span className="badge badge-primary">{absoluteIdx + 1}</span>
-                  {header}
+                <h4 style={{ marginBottom: '1rem', color: 'var(--primary-300)', display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span className="badge badge-primary">{absoluteIdx + 1}</span>
+                    {header}
+                  </div>
+                  <button 
+                    className="btn btn-secondary btn-sm" 
+                    style={{ color: 'var(--error-400)' }}
+                    onClick={() => setIgnored([...ignored, absoluteIdx])}
+                    title="حذف هذا السؤال واستبعاده من التحليل"
+                  >
+                    🗑️ حذف السؤال
+                  </button>
                 </h4>
 
                 <DragDropContext onDragEnd={(result) => onDragEnd(result, absoluteIdx)}>

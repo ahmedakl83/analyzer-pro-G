@@ -5,8 +5,6 @@ import QuestionConfig from './components/QuestionConfig/QuestionConfig';
 import DemographicReview from './components/DemographicReview/DemographicReview';
 import LikertReview from './components/LikertReview/LikertReview';
 import AnalysisView from './components/Analysis/AnalysisView';
-import SurveyManager from './components/SurveyFlow/SurveyManager';
-import DataEntry from './components/SurveyFlow/DataEntry';
 import type { AppStep, AppTab } from './types/survey';
 import './index.css';
 
@@ -18,11 +16,7 @@ const STEPS: { key: AppStep; label: string; icon: string }[] = [
   { key: 'analysis', label: 'عرض النتائج', icon: '📊' },
 ];
 
-const TABS: { key: AppTab; label: string; icon: string }[] = [
-  { key: 'survey', label: 'إعداد الاستبيان', icon: '📋' },
-  { key: 'entry', label: 'تفريغ البيانات', icon: '✍️' },
-  { key: 'analysis', label: 'تحليل النتائج', icon: '📊' },
-];
+
 
 function getStepIndex(step: AppStep): number {
   return STEPS.findIndex(s => s.key === step);
@@ -77,43 +71,29 @@ function AppContent() {
         </div>
       </header>
 
-      {/* Main Tabs */}
-      <nav className="main-tabs">
-        {TABS.map((tab) => (
-          <button
-            key={tab.key}
-            className={`tab-item ${state.activeTab === tab.key ? 'active' : ''}`}
-            onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', payload: tab.key })}
-          >
-            <span className="tab-icon">{tab.icon}</span>
-            {tab.label}
-          </button>
+
+
+      {/* Stepper */}
+      <nav className="stepper">
+        {STEPS.map((step, idx) => (
+          <div key={step.key} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div
+              className={`stepper-item ${
+                idx === currentStepIndex ? 'active' :
+                idx < currentStepIndex ? 'completed' : ''
+              }`}
+            >
+              <span className="stepper-item-number">
+                {idx < currentStepIndex ? '✓' : step.icon}
+              </span>
+              {step.label}
+            </div>
+            {idx < STEPS.length - 1 && (
+              <div className={`stepper-connector ${idx < currentStepIndex ? 'completed' : ''}`} />
+            )}
+          </div>
         ))}
       </nav>
-
-      {/* Stepper (Only for Analysis Tab) */}
-      {state.activeTab === 'analysis' && (
-        <nav className="stepper">
-          {STEPS.map((step, idx) => (
-            <div key={step.key} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div
-                className={`stepper-item ${
-                  idx === currentStepIndex ? 'active' :
-                  idx < currentStepIndex ? 'completed' : ''
-                }`}
-              >
-                <span className="stepper-item-number">
-                  {idx < currentStepIndex ? '✓' : step.icon}
-                </span>
-                {step.label}
-              </div>
-              {idx < STEPS.length - 1 && (
-                <div className={`stepper-connector ${idx < currentStepIndex ? 'completed' : ''}`} />
-              )}
-            </div>
-          ))}
-        </nav>
-      )}
 
       {/* Loading Overlay */}
       {state.isAnalyzing && (
@@ -125,17 +105,11 @@ function AppContent() {
 
       {/* Main Content */}
       <main className="app-content">
-        {state.activeTab === 'survey' && <SurveyManager />}
-        {state.activeTab === 'entry' && <DataEntry />}
-        {state.activeTab === 'analysis' && (
-          <>
-            {state.currentStep === 'upload' && <FileUpload />}
-            {state.currentStep === 'configure' && <QuestionConfig />}
-            {state.currentStep === 'review-demographics' && <DemographicReview />}
-            {state.currentStep === 'review-likert' && <LikertReview />}
-            {state.currentStep === 'analysis' && <AnalysisView />}
-          </>
-        )}
+        {state.currentStep === 'upload' && <FileUpload />}
+        {state.currentStep === 'configure' && <QuestionConfig />}
+        {state.currentStep === 'review-demographics' && <DemographicReview />}
+        {state.currentStep === 'review-likert' && <LikertReview />}
+        {state.currentStep === 'analysis' && <AnalysisView />}
       </main>
 
       {/* Footer */}

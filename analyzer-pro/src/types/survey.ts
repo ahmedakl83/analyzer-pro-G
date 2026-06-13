@@ -13,6 +13,7 @@ export interface DemographicRange {
   endIndex: number;
   multiChoiceQuestions?: number[];
   customAnswerOrders?: Record<number, string[]>;
+  ignoredQuestions?: number[];
 }
 
 export interface LikertGroup {

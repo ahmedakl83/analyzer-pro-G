@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer, type ReactNode } from 're
 import type { AppState, AppAction } from '../types/survey';
 
 const initialState: AppState = {
-  activeTab: 'survey',
+  activeTab: 'analysis',
   currentStep: 'upload',
   activeTemplate: null,
   activeSession: null,
