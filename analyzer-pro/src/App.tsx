@@ -5,7 +5,7 @@ import QuestionConfig from './components/QuestionConfig/QuestionConfig';
 import DemographicReview from './components/DemographicReview/DemographicReview';
 import LikertReview from './components/LikertReview/LikertReview';
 import AnalysisView from './components/Analysis/AnalysisView';
-import type { AppStep, AppTab } from './types/survey';
+import type { AppStep } from './types/survey';
 import './index.css';
 
 const STEPS: { key: AppStep; label: string; icon: string }[] = [
@@ -23,7 +23,7 @@ function getStepIndex(step: AppStep): number {
 }
 
 function AppContent() {
-  const { state, dispatch } = useSurvey();
+  const { state } = useSurvey();
   const currentStepIndex = getStepIndex(state.currentStep);
 
   // Theme toggle
