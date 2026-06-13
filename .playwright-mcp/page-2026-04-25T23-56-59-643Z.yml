@@ -1,0 +1,103 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - img "Logo" [ref=e6]
+      - generic [ref=e7]:
+        - generic [ref=e8]: Survey Analyzer Pro
+        - generic [ref=e9]: محلل الاستبيانات الإلكترونية
+    - generic [ref=e10]:
+      - generic [ref=e55]: 📄 test-survey.csv
+      - button "تبديل الوضع" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: ☀️
+  - navigation [ref=e13]:
+    - generic [ref=e15]:
+      - generic [ref=e16]: ✓
+      - text: رفع الملف
+    - generic [ref=e19]:
+      - generic [ref=e20]: ⚙️
+      - text: إعداد الأسئلة
+    - generic [ref=e23]:
+      - generic [ref=e24]: 🔍
+      - text: مراجعة ليكرت
+    - generic [ref=e27]:
+      - generic [ref=e28]: 📊
+      - text: عرض النتائج
+  - main [ref=e29]:
+    - generic [ref=e107]:
+      - generic [ref=e108]:
+        - heading "⚙️ إعداد مجموعات الأسئلة" [level=2] [ref=e109]
+        - paragraph [ref=e110]: حدد نطاق الأسئلة الديموغرافية ومجموعات ليكرت
+      - generic [ref=e111]:
+        - generic [ref=e112]:
+          - generic [ref=e113]: 🤖 التصنيف التلقائي
+          - generic [ref=e114]: يحلل رؤوس الأعمدة ويكتشف الأسئلة الديموغرافية ومجموعات ليكرت تلقائياً
+        - button "✨ صنّف تلقائياً" [ref=e115] [cursor=pointer]
+      - generic [ref=e116]:
+        - heading "📋 الأسئلة الديموغرافية" [level=3] [ref=e117]
+        - generic [ref=e118]:
+          - generic [ref=e119]: "من السؤال:"
+          - combobox [ref=e120]:
+            - option "1. الطابع الزمني"
+            - option "2. الجنس" [selected]
+            - option "3. العمر"
+            - option "4. المؤهل العلمي"
+            - option "5. هل أنت راضٍ عن بيئة العمل؟"
+            - option "6. هل تشعر بالتقدير من مديرك؟"
+            - option "7. هل تجد فرص للتطوير المهني؟"
+            - option "8. هل العلاقة مع زملاء العمل جيدة؟"
+            - option "9. هل تتوازن ساعات العمل مع حياتك الشخصية؟"
+          - generic [ref=e121]: "إلى السؤال:"
+          - combobox [ref=e122]:
+            - option "1. الطابع الزمني" [disabled]
+            - option "2. الجنس"
+            - option "3. العمر"
+            - option "4. المؤهل العلمي" [selected]
+            - option "5. هل أنت راضٍ عن بيئة العمل؟"
+            - option "6. هل تشعر بالتقدير من مديرك؟"
+            - option "7. هل تجد فرص للتطوير المهني؟"
+            - option "8. هل العلاقة مع زملاء العمل جيدة؟"
+            - option "9. هل تتوازن ساعات العمل مع حياتك الشخصية؟"
+        - generic [ref=e123]:
+          - generic [ref=e124]: "الأسئلة الديموغرافية المحددة (3 سؤال):"
+          - generic [ref=e125]:
+            - generic [ref=e126]: "2"
+            - generic [ref=e127]: الجنس
+          - generic [ref=e144]:
+            - generic [ref=e145]: "3"
+            - generic [ref=e146]: العمر
+          - generic [ref=e147]:
+            - generic [ref=e148]: "4"
+            - generic [ref=e149]: المؤهل العلمي
+      - generic [ref=e128]:
+        - heading "📊 مجموعات أسئلة ليكرت" [level=3] [ref=e129]
+        - generic [ref=e168]:
+          - generic [ref=e169]:
+            - generic [ref=e170]: "1"
+            - generic [ref=e171]:
+              - generic [ref=e172]: المجموعة 1
+              - generic [ref=e173]:
+                - text: الأسئلة من 5 إلى 9
+                - generic [ref=e174]: 5 سؤال
+          - button "✕ حذف" [ref=e175] [cursor=pointer]
+        - generic [ref=e176]:
+          - generic [ref=e177]: ✅
+          - generic [ref=e178]: تم تخصيص كافة الأسئلة بنجاح! يمكنك المتابعة.
+      - generic [ref=e141]:
+        - button "⬅️ السابق" [ref=e142] [cursor=pointer]
+        - 'button "التالي: مراجعة إجابات ليكرت ➡️" [ref=e179] [cursor=pointer]'
+  - contentinfo [ref=e42]:
+    - generic [ref=e43]: Survey Analyzer Pro v1.0 — محلل الاستبيانات الإلكترونية
+    - generic [ref=e44]:
+      - generic [ref=e45]: "تطوير:"
+      - generic [ref=e46]: Ahmed Akl
+      - generic [ref=e47]: "|"
+      - generic [ref=e48]: Classic for Computer Services (CCS)
+      - generic [ref=e49]: "|"
+      - link "📧 ahmedakl.classic@gmail.com" [ref=e50] [cursor=pointer]:
+        - /url: mailto:ahmedakl.classic@gmail.com
+      - generic [ref=e51]: "|"
+      - link "💬 01008875157" [ref=e52] [cursor=pointer]:
+        - /url: https://wa.me/2001008875157
+      - generic [ref=e53]: "|"
+      - link "📍 الموقع" [ref=e54] [cursor=pointer]:
+        - /url: https://maps.app.goo.gl/j2qG5vCzPNtPb9NM8

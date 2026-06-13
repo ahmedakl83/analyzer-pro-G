@@ -1,0 +1,12 @@
+[     259ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:1420/node_modules/.vite/deps/react-dom_client.js?v=93b5c36b:20102
+[   31422ms] [ERROR] DOCX export failed: Error: nodebuffer is not supported by this platform
+    at a.checkSupport (http://localhost:1420/node_modules/.vite/deps/docx.js?v=93b5c36b:19709:43)
+    at new f (http://localhost:1420/node_modules/.vite/deps/docx.js?v=93b5c36b:19514:84)
+    at n.generateInternalStream (http://localhost:1420/node_modules/.vite/deps/docx.js?v=93b5c36b:19237:18)
+    at n.generateAsync (http://localhost:1420/node_modules/.vite/deps/docx.js?v=93b5c36b:19239:23)
+    at _Packer2.<anonymous> (http://localhost:1420/node_modules/.vite/deps/docx.js?v=93b5c36b:22096:18)
+    at Generator.next (<anonymous>)
+    at http://localhost:1420/node_modules/.vite/deps/docx.js?v=93b5c36b:53:61
+    at new Promise (<anonymous>)
+    at __async (http://localhost:1420/node_modules/.vite/deps/docx.js?v=93b5c36b:37:10)
+    at _Packer2.pack (http://localhost:1420/node_modules/.vite/deps/docx.js?v=93b5c36b:22094:12) @ http://localhost:1420/src/components/Analysis/AnalysisView.tsx?t=1777161831482:278

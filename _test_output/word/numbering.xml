@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:abstractNum w:abstractNumId="0">
+    <w:nsid w:val="23C856CB"/>
+    <w:multiLevelType w:val="hybridMultilevel"/>
+    <w:tmpl w:val="0A0CD48C"/>
+    <w:lvl w:ilvl="0">
+      <w:start w:val="1"/>
+      <w:numFmt w:val="decimal"/>
+      <w:lvlText w:val="%1."/>
+      <w:lvlJc w:val="left"/>
+      <w:pPr><w:ind w:left="567" w:hanging="567"/></w:pPr>
+      <w:rPr>
+        <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+        <w:b/><w:bCs/>
+        <w:color w:val="1F3864"/>
+        <w:sz w:val="32"/><w:szCs w:val="32"/>
+      </w:rPr>
+    </w:lvl>
+  </w:abstractNum>
+  <w:num w:numId="2">
+    <w:abstractNumId w:val="0"/>
+  </w:num>
+</w:numbering>

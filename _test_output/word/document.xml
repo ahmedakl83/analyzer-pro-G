@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+  xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart"
+  mc:Ignorable="w14 w15">
+  <w:body>
+    <w:p>
+    <w:pPr>
+      <w:pStyle w:val="a4"/>
+      <w:numPr><w:ilvl w:val="0"/><w:numId w:val="2"/></w:numPr>
+      <w:bidi/>
+      <w:spacing w:before="60" w:after="60"/>
+      <w:ind w:left="567" w:hanging="567"/>
+      <w:jc w:val="both"/>
+    </w:pPr>
+    <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    <w:b/><w:bCs/>
+    <w:color w:val="1F3864"/>
+    <w:sz w:val="32"/><w:szCs w:val="32"/>
+    <w:rtl/>
+  </w:rPr><w:t>الجنس</w:t></w:r>
+  </w:p>
+<w:p><w:pPr><w:bidi/><w:spacing w:before="60" w:after="60"/></w:pPr></w:p>
+<w:p>
+    <w:pPr>
+      <w:spacing w:before="60" w:after="60"/>
+      <w:jc w:val="center"/>
+    </w:pPr>
+    <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    <w:b/><w:bCs/>
+    
+    <w:sz w:val="30"/><w:szCs w:val="30"/>
+    <w:rtl/>
+  </w:rPr><w:t>جدول (١)</w:t></w:r>
+  </w:p>
+<w:p><w:pPr><w:bidi/><w:spacing w:before="60" w:after="60"/></w:pPr></w:p>
+<w:tbl>
+    <w:tblPr>
+      <w:bidiVisual/>
+      <w:tblW w:w="5000" w:type="pct"/>
+      <w:tblBorders>
+        <w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+        <w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+        <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+        <w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+        <w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+        <w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+      </w:tblBorders>
+      <w:tblLayout w:type="fixed"/>
+      <w:tblCellMar>
+        <w:left w:w="10" w:type="dxa"/>
+        <w:right w:w="10" w:type="dxa"/>
+      </w:tblCellMar>
+    </w:tblPr>
+    <w:tblGrid>
+      <w:gridCol w:w="2768"/>
+      <w:gridCol w:w="2767"/>
+      <w:gridCol w:w="2767"/>
+    </w:tblGrid>
+    <w:tr>
+    <w:tblPrEx><w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/></w:tblCellMar></w:tblPrEx>
+    <w:trPr><w:trHeight w:val="400"/><w:tblHeader/></w:trPr>
+    <w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2768" w:type="dxa"/>
+      <w:tcBorders>
+    <w:top w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:left w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:right w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+  </w:tcBorders>
+      <w:shd w:val="solid" w:color="1F3864" w:fill="1F3864"/>
+      <w:vAlign w:val="center"/>
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+      <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    <w:b/><w:bCs/>
+    <w:color w:val="FFFFFF"/>
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:rtl/>
+  </w:rPr><w:t>الإجابة</w:t></w:r>
+    </w:p>
+  </w:tc>
+    <w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2767" w:type="dxa"/>
+      <w:tcBorders>
+    <w:top w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:left w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:right w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+  </w:tcBorders>
+      <w:shd w:val="solid" w:color="1F3864" w:fill="1F3864"/>
+      <w:vAlign w:val="center"/>
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+      <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    <w:b/><w:bCs/>
+    <w:color w:val="FFFFFF"/>
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:rtl/>
+  </w:rPr><w:t>التكرار</w:t></w:r>
+    </w:p>
+  </w:tc>
+    <w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2767" w:type="dxa"/>
+      <w:tcBorders>
+    <w:top w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:left w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:right w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+  </w:tcBorders>
+      <w:shd w:val="solid" w:color="1F3864" w:fill="1F3864"/>
+      <w:vAlign w:val="center"/>
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+      <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    <w:b/><w:bCs/>
+    <w:color w:val="FFFFFF"/>
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:rtl/>
+  </w:rPr><w:t>النسبة %</w:t></w:r>
+    </w:p>
+  </w:tc>
+  </w:tr>
+    <w:tr>
+    <w:tblPrEx><w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/></w:tblCellMar></w:tblPrEx>
+    <w:trPr><w:trHeight w:val="360"/></w:trPr>
+    <w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2768" w:type="dxa"/>
+      <w:tcBorders>
+    <w:top w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:left w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:right w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+  </w:tcBorders>
+      
+      <w:vAlign w:val="center"/>
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+      <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    
+    
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:rtl/>
+  </w:rPr><w:t>أنثى</w:t></w:r>
+    </w:p>
+  </w:tc>
+    <w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2767" w:type="dxa"/>
+      <w:tcBorders>
+    <w:top w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:left w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:right w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+  </w:tcBorders>
+      
+      <w:vAlign w:val="center"/>
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+      <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    
+    
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:rtl/>
+  </w:rPr><w:t>٩</w:t></w:r>
+    </w:p>
+  </w:tc>
+    <w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2767" w:type="dxa"/>
+      <w:tcBorders>
+    <w:top w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:left w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:right w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+  </w:tcBorders>
+      
+      <w:vAlign w:val="center"/>
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+      <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    
+    
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:rtl/>
+  </w:rPr><w:t>٦٩.٢٣%</w:t></w:r>
+    </w:p>
+  </w:tc>
+  </w:tr><w:tr>
+    <w:tblPrEx><w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/></w:tblCellMar></w:tblPrEx>
+    <w:trPr><w:trHeight w:val="360"/></w:trPr>
+    <w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2768" w:type="dxa"/>
+      <w:tcBorders>
+    <w:top w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:left w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:right w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+  </w:tcBorders>
+      
+      <w:vAlign w:val="center"/>
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+      <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    
+    
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:rtl/>
+  </w:rPr><w:t>ذكر</w:t></w:r>
+    </w:p>
+  </w:tc>
+    <w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2767" w:type="dxa"/>
+      <w:tcBorders>
+    <w:top w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:left w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:right w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+  </w:tcBorders>
+      
+      <w:vAlign w:val="center"/>
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+      <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    
+    
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:rtl/>
+  </w:rPr><w:t>٤</w:t></w:r>
+    </w:p>
+  </w:tc>
+    <w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2767" w:type="dxa"/>
+      <w:tcBorders>
+    <w:top w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:left w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:right w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+  </w:tcBorders>
+      
+      <w:vAlign w:val="center"/>
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+      <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    
+    
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:rtl/>
+  </w:rPr><w:t>٣٠.٧٧%</w:t></w:r>
+    </w:p>
+  </w:tc>
+  </w:tr>
+    <w:tr>
+    <w:tblPrEx><w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/></w:tblCellMar></w:tblPrEx>
+    <w:trPr><w:trHeight w:val="360"/></w:trPr>
+    <w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2768" w:type="dxa"/>
+      <w:tcBorders>
+    <w:top w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:left w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:right w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+  </w:tcBorders>
+      <w:shd w:val="solid" w:color="F2F2F2" w:fill="F2F2F2"/>
+      <w:vAlign w:val="center"/>
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+      <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    <w:b/><w:bCs/>
+    
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:rtl/>
+  </w:rPr><w:t>الإجمالي</w:t></w:r>
+    </w:p>
+  </w:tc>
+    <w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2767" w:type="dxa"/>
+      <w:tcBorders>
+    <w:top w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:left w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:right w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+  </w:tcBorders>
+      <w:shd w:val="solid" w:color="F2F2F2" w:fill="F2F2F2"/>
+      <w:vAlign w:val="center"/>
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+      <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    <w:b/><w:bCs/>
+    
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:rtl/>
+  </w:rPr><w:t>١٣</w:t></w:r>
+    </w:p>
+  </w:tc>
+    <w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2767" w:type="dxa"/>
+      <w:tcBorders>
+    <w:top w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:left w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+    <w:right w:val="single" w:sz="4" w:space="0" w:color="999999"/>
+  </w:tcBorders>
+      <w:shd w:val="solid" w:color="F2F2F2" w:fill="F2F2F2"/>
+      <w:vAlign w:val="center"/>
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+      <w:r><w:rPr>
+    <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+    <w:b/><w:bCs/>
+    
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:rtl/>
+  </w:rPr><w:t>100%</w:t></w:r>
+    </w:p>
+  </w:tc>
+  </w:tr>
+  </w:tbl>
+<w:p><w:pPr><w:bidi/><w:spacing w:before="60" w:after="60"/></w:pPr></w:p>
+<w:p>
+    <w:pPr><w:spacing w:before="60" w:after="60"/><w:jc w:val="center"/></w:pPr>
+    <w:r>
+      <w:rPr><w:noProof/></w:rPr>
+      <w:drawing>
+        <wp:inline distT="0" distB="0" distL="0" distR="0">
+          <wp:extent cx="5278120" cy="3079115"/>
+          <wp:effectExtent l="0" t="0" r="17780" b="6985"/>
+          <wp:docPr id="1" name="الجنس"/>
+          <wp:cNvGraphicFramePr/>
+          <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+            <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/chart">
+              <c:chart xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" r:id="rId11"/>
+            </a:graphicData>
+          </a:graphic>
+        </wp:inline>
+      </w:drawing>
+    </w:r>
+  </w:p>
+<w:p><w:pPr><w:bidi/><w:spacing w:before="60" w:after="60"/></w:pPr></w:p>
+<w:p>
+    <w:pPr>
+      <w:spacing w:before="60" w:after="60"/>
+      <w:jc w:val="both"/>
+    </w:pPr>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Simplified Arabic" w:hAnsi="Simplified Arabic" w:cs="Simplified Arabic"/>
+        <w:sz w:val="28"/><w:szCs w:val="28"/>
+        <w:rtl/>
+      </w:rPr>
+      <w:t>يتضح من الجدول (١) والشكل البياني (١) : أن أعلى نسبة كانت لفئة (أنثى) بنسبة (٦٩.٢٣%)، يليها فئة (ذكر) بنسبة (٣٠.٧٧%).</w:t>
+    </w:r>
+  </w:p>
+    <w:sectPr>
+    <w:footerReference w:type="default" r:id="rId8"/>
+    <w:pgSz w:w="11906" w:h="16838" w:code="9"/>
+    <w:pgMar w:top="1440" w:right="1797" w:bottom="1440" w:left="1797" w:header="709" w:footer="709" w:gutter="0"/>
+    <w:pgNumType w:start="1"/>
+    <w:cols w:space="720"/>
+    <w:bidi/>
+    <w:docGrid w:linePitch="360"/>
+  </w:sectPr>
+  </w:body>
+</w:document>

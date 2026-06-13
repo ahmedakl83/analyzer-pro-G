@@ -1,0 +1,95 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - img "Logo" [ref=e6]
+      - generic [ref=e7]:
+        - generic [ref=e8]: Survey Analyzer Pro
+        - generic [ref=e9]: محلل الاستبيانات الإلكترونية
+    - generic [ref=e10]:
+      - generic [ref=e55]: 📄 test-survey.csv
+      - button "تبديل الوضع" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: ☀️
+  - navigation [ref=e13]:
+    - generic [ref=e15]:
+      - generic [ref=e16]: 📁
+      - text: رفع الملف
+    - generic [ref=e19]:
+      - generic [ref=e20]: ⚙️
+      - text: إعداد الأسئلة
+    - generic [ref=e23]:
+      - generic [ref=e24]: 🔍
+      - text: مراجعة ليكرت
+    - generic [ref=e27]:
+      - generic [ref=e28]: 📊
+      - text: عرض النتائج
+  - main [ref=e29]:
+    - generic [ref=e30]:
+      - generic [ref=e31]:
+        - heading "📁 رفع ملف الاستبيان" [level=2] [ref=e56]
+        - paragraph [ref=e57]: قم برفع ملف نتائج الاستبيان من Google Forms (CSV أو Excel)
+      - generic [ref=e58]:
+        - generic [ref=e59]: ✅
+        - generic [ref=e60]:
+          - text: "تم تحميل الملف بنجاح:"
+          - strong [ref=e61]: test-survey.csv
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]: 📋
+          - generic [ref=e65]: "9"
+          - generic [ref=e66]: عدد الأسئلة (الأعمدة)
+        - generic [ref=e67]:
+          - generic [ref=e68]: 👥
+          - generic [ref=e69]: "20"
+          - generic [ref=e70]: عدد الإجابات (الصفوف)
+        - generic [ref=e71]:
+          - generic [ref=e72]: 📄
+          - generic [ref=e73]: CSV
+          - generic [ref=e74]: نوع الملف
+      - generic [ref=e75]:
+        - generic [ref=e76]: "معاينة الأسئلة:"
+        - generic [ref=e77]:
+          - generic [ref=e78]: "1"
+          - generic [ref=e79]: الطابع الزمني
+        - generic [ref=e80]:
+          - generic [ref=e81]: "2"
+          - generic [ref=e82]: الجنس
+        - generic [ref=e83]:
+          - generic [ref=e84]: "3"
+          - generic [ref=e85]: العمر
+        - generic [ref=e86]:
+          - generic [ref=e87]: "4"
+          - generic [ref=e88]: المؤهل العلمي
+        - generic [ref=e89]:
+          - generic [ref=e90]: "5"
+          - generic [ref=e91]: هل أنت راضٍ عن بيئة العمل؟
+        - generic [ref=e92]:
+          - generic [ref=e93]: "6"
+          - generic [ref=e94]: هل تشعر بالتقدير من مديرك؟
+        - generic [ref=e95]:
+          - generic [ref=e96]: "7"
+          - generic [ref=e97]: هل تجد فرص للتطوير المهني؟
+        - generic [ref=e98]:
+          - generic [ref=e99]: "8"
+          - generic [ref=e100]: هل العلاقة مع زملاء العمل جيدة؟
+        - generic [ref=e101]:
+          - generic [ref=e102]: "9"
+          - generic [ref=e103]: هل تتوازن ساعات العمل مع حياتك الشخصية؟
+      - generic [ref=e104]:
+        - button "🔄 رفع ملف آخر" [ref=e105] [cursor=pointer]
+        - 'button "التالي: إعداد الأسئلة ➡️" [ref=e106] [cursor=pointer]'
+  - contentinfo [ref=e42]:
+    - generic [ref=e43]: Survey Analyzer Pro v1.0 — محلل الاستبيانات الإلكترونية
+    - generic [ref=e44]:
+      - generic [ref=e45]: "تطوير:"
+      - generic [ref=e46]: Ahmed Akl
+      - generic [ref=e47]: "|"
+      - generic [ref=e48]: Classic for Computer Services (CCS)
+      - generic [ref=e49]: "|"
+      - link "📧 ahmedakl.classic@gmail.com" [ref=e50] [cursor=pointer]:
+        - /url: mailto:ahmedakl.classic@gmail.com
+      - generic [ref=e51]: "|"
+      - link "💬 01008875157" [ref=e52] [cursor=pointer]:
+        - /url: https://wa.me/2001008875157
+      - generic [ref=e53]: "|"
+      - link "📍 الموقع" [ref=e54] [cursor=pointer]:
+        - /url: https://maps.app.goo.gl/j2qG5vCzPNtPb9NM8

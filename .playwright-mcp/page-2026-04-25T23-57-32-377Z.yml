@@ -1,0 +1,105 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - img "Logo" [ref=e6]
+      - generic [ref=e7]:
+        - generic [ref=e8]: Survey Analyzer Pro
+        - generic [ref=e9]: محلل الاستبيانات الإلكترونية
+    - generic [ref=e10]:
+      - generic [ref=e55]: 📄 test-survey.csv
+      - button "تبديل الوضع" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: ☀️
+  - navigation [ref=e13]:
+    - generic [ref=e15]:
+      - generic [ref=e16]: ✓
+      - text: رفع الملف
+    - generic [ref=e19]:
+      - generic [ref=e20]: ✓
+      - text: إعداد الأسئلة
+    - generic [ref=e23]:
+      - generic [ref=e24]: 🔍
+      - text: مراجعة ليكرت
+    - generic [ref=e27]:
+      - generic [ref=e28]: 📊
+      - text: عرض النتائج
+  - main [ref=e29]:
+    - generic [ref=e180]:
+      - generic [ref=e181]:
+        - heading "🔍 مراجعة إجابات مقياس ليكرت" [level=2] [ref=e182]
+        - paragraph [ref=e183]: تم اكتشاف إجابات مقياس ليكرت تلقائيًا. يمكنك تعديلها أو إعادة ترتيبها أو الموافقة عليها كما هي.
+      - generic [ref=e184]:
+        - heading "📝 إجابات المقياس (5 إجابات)" [level=3] [ref=e185]
+        - generic [ref=e186]:
+          - generic [ref=e187]: 💡
+          - generic [ref=e188]: "يجب أن يكون ترتيب الإجابات من الأعلى موافقة إلى الأدنى (مثلاً: أوافق بشدة ← لا أوافق بشدة). يمكنك تعديل النص، حذف إجابات غير مرغوبة، أو إعادة الترتيب."
+        - generic [ref=e189]:
+          - generic [ref=e190]:
+            - generic [ref=e191]: "1"
+            - textbox "الإجابة 1" [ref=e192]: موافق بشدة
+            - generic [ref=e193]:
+              - button "▲" [disabled] [ref=e194]
+              - button "▼" [ref=e195] [cursor=pointer]
+              - button "✕" [ref=e196] [cursor=pointer]
+          - generic [ref=e197]:
+            - generic [ref=e198]: "2"
+            - textbox "الإجابة 2" [ref=e199]: موافق
+            - generic [ref=e200]:
+              - button "▲" [ref=e201] [cursor=pointer]
+              - button "▼" [ref=e202] [cursor=pointer]
+              - button "✕" [ref=e203] [cursor=pointer]
+          - generic [ref=e204]:
+            - generic [ref=e205]: "3"
+            - textbox "الإجابة 3" [ref=e206]: محايد
+            - generic [ref=e207]:
+              - button "▲" [ref=e208] [cursor=pointer]
+              - button "▼" [ref=e209] [cursor=pointer]
+              - button "✕" [ref=e210] [cursor=pointer]
+          - generic [ref=e211]:
+            - generic [ref=e212]: "4"
+            - textbox "الإجابة 4" [ref=e213]: غير موافق
+            - generic [ref=e214]:
+              - button "▲" [ref=e215] [cursor=pointer]
+              - button "▼" [ref=e216] [cursor=pointer]
+              - button "✕" [ref=e217] [cursor=pointer]
+          - generic [ref=e218]:
+            - generic [ref=e219]: "5"
+            - textbox "الإجابة 5" [ref=e220]: غير موافق بشدة
+            - generic [ref=e221]:
+              - button "▲" [ref=e222] [cursor=pointer]
+              - button "▼" [disabled] [ref=e223]
+              - button "✕" [ref=e224] [cursor=pointer]
+        - button "➕ إضافة إجابة" [ref=e226] [cursor=pointer]
+      - generic [ref=e227]:
+        - heading "📊 ملخص الإعدادات" [level=3] [ref=e228]
+        - generic [ref=e229]:
+          - generic [ref=e230]:
+            - generic [ref=e231]: 📋
+            - generic [ref=e232]: "3"
+            - generic [ref=e233]: أسئلة ديموغرافية
+          - generic [ref=e234]:
+            - generic [ref=e235]: 📊
+            - generic [ref=e236]: "1"
+            - generic [ref=e237]: مجموعات ليكرت
+          - generic [ref=e238]:
+            - generic [ref=e239]: 📝
+            - generic [ref=e240]: "5"
+            - generic [ref=e241]: إجابات المقياس
+      - generic [ref=e242]:
+        - button "⬅️ السابق" [ref=e243] [cursor=pointer]
+        - button "✅ تأكيد وبدء التحليل" [ref=e244] [cursor=pointer]
+  - contentinfo [ref=e42]:
+    - generic [ref=e43]: Survey Analyzer Pro v1.0 — محلل الاستبيانات الإلكترونية
+    - generic [ref=e44]:
+      - generic [ref=e45]: "تطوير:"
+      - generic [ref=e46]: Ahmed Akl
+      - generic [ref=e47]: "|"
+      - generic [ref=e48]: Classic for Computer Services (CCS)
+      - generic [ref=e49]: "|"
+      - link "📧 ahmedakl.classic@gmail.com" [ref=e50] [cursor=pointer]:
+        - /url: mailto:ahmedakl.classic@gmail.com
+      - generic [ref=e51]: "|"
+      - link "💬 01008875157" [ref=e52] [cursor=pointer]:
+        - /url: https://wa.me/2001008875157
+      - generic [ref=e53]: "|"
+      - link "📍 الموقع" [ref=e54] [cursor=pointer]:
+        - /url: https://maps.app.goo.gl/j2qG5vCzPNtPb9NM8

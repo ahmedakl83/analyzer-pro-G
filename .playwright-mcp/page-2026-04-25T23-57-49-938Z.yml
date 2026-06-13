@@ -1,0 +1,154 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - img "Logo" [ref=e6]
+      - generic [ref=e7]:
+        - generic [ref=e8]: Survey Analyzer Pro
+        - generic [ref=e9]: محلل الاستبيانات الإلكترونية
+    - generic [ref=e10]:
+      - generic [ref=e55]: 📄 test-survey.csv
+      - button "تبديل الوضع" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: ☀️
+  - navigation [ref=e13]:
+    - generic [ref=e15]:
+      - generic [ref=e16]: ✓
+      - text: رفع الملف
+    - generic [ref=e19]:
+      - generic [ref=e20]: ✓
+      - text: إعداد الأسئلة
+    - generic [ref=e23]:
+      - generic [ref=e24]: ✓
+      - text: مراجعة ليكرت
+    - generic [ref=e27]:
+      - generic [ref=e28]: 📊
+      - text: عرض النتائج
+  - main [ref=e29]:
+    - generic [ref=e245]:
+      - generic [ref=e246]:
+        - generic [ref=e247]:
+          - heading "📊 نتائج التحليل" [level=2] [ref=e248]
+          - paragraph [ref=e249]: عرض وتصدير نتائج تحليل الاستبيان
+        - generic [ref=e250]:
+          - button "📋 الأسئلة الديموغرافية (3)" [ref=e251] [cursor=pointer]
+          - button "📊 أسئلة ليكرت (1 مجموعات)" [ref=e252] [cursor=pointer]
+        - generic [ref=e253]:
+          - button "📥 تصدير الكل (XLSX)" [ref=e254] [cursor=pointer]
+          - button "📄 تصدير Word (DOCX)" [ref=e255] [cursor=pointer]
+          - generic [ref=e256]:
+            - generic [ref=e257]: "نمط التعليق:"
+            - combobox [ref=e258]:
+              - option "أساسي" [selected]
+              - option "متقدم"
+      - generic [ref=e259]:
+        - generic [ref=e260]:
+          - generic [ref=e261]: "سؤال 1: الجنس"
+          - table [ref=e263]:
+            - rowgroup [ref=e264]:
+              - row "الإجابة التكرار النسبة المئوية" [ref=e265]:
+                - columnheader "الإجابة" [ref=e266]
+                - columnheader "التكرار" [ref=e267]
+                - columnheader "النسبة المئوية" [ref=e268]
+            - rowgroup [ref=e269]:
+              - row "ذكر 10 50%" [ref=e270]:
+                - cell "ذكر" [ref=e271]
+                - cell "10" [ref=e272]
+                - cell "50%" [ref=e273]
+              - row "أنثى 10 50%" [ref=e274]:
+                - cell "أنثى" [ref=e275]
+                - cell "10" [ref=e276]
+                - cell "50%" [ref=e277]
+              - row "الإجمالي 20 100%" [ref=e278]:
+                - cell "الإجمالي" [ref=e279]
+                - cell "20" [ref=e280]
+                - cell "100%" [ref=e281]
+          - generic [ref=e282]:
+            - strong [ref=e283]: "📝 تعقيب تحليلي:"
+            - text: أظهرت النتائج انقسام عينة البحث بالتساوي بين (ذكر) و(أنثى) بنسبة (٥٠%) لكل منهما، وهو ما يشكل نصف عينة البحث لكل فئة.
+        - generic [ref=e284]:
+          - generic [ref=e285]: "سؤال 2: العمر"
+          - table [ref=e287]:
+            - rowgroup [ref=e288]:
+              - row "الإجابة التكرار النسبة المئوية" [ref=e289]:
+                - columnheader "الإجابة" [ref=e290]
+                - columnheader "التكرار" [ref=e291]
+                - columnheader "النسبة المئوية" [ref=e292]
+            - rowgroup [ref=e293]:
+              - row "25-35 6 30%" [ref=e294]:
+                - cell "25-35" [ref=e295]
+                - cell "6" [ref=e296]
+                - cell "30%" [ref=e297]
+              - row "36-45 5 25%" [ref=e298]:
+                - cell "36-45" [ref=e299]
+                - cell "5" [ref=e300]
+                - cell "25%" [ref=e301]
+              - row "18-24 5 25%" [ref=e302]:
+                - cell "18-24" [ref=e303]
+                - cell "5" [ref=e304]
+                - cell "25%" [ref=e305]
+              - row "46+ 4 20%" [ref=e306]:
+                - cell "46+" [ref=e307]
+                - cell "4" [ref=e308]
+                - cell "20%" [ref=e309]
+              - row "الإجمالي 20 100%" [ref=e310]:
+                - cell "الإجمالي" [ref=e311]
+                - cell "20" [ref=e312]
+                - cell "100%" [ref=e313]
+          - generic [ref=e314]:
+            - strong [ref=e315]: "📝 تعقيب تحليلي:"
+            - text: يتضح من الجدول أن أعلى نسبة كانت لفئة (25-35) بنسبة (٣٠%)، يليها تساوت كلٌّ من (36-45) و(18-24) بنسبة (٢٥%) وهو ما يشكل ربع عينة البحث لكل منهما، وأخيراً فئة (46+) بنسبة (٢٠%).
+        - generic [ref=e316]:
+          - generic [ref=e317]: "سؤال 3: المؤهل العلمي"
+          - table [ref=e319]:
+            - rowgroup [ref=e320]:
+              - row "الإجابة التكرار النسبة المئوية" [ref=e321]:
+                - columnheader "الإجابة" [ref=e322]
+                - columnheader "التكرار" [ref=e323]
+                - columnheader "النسبة المئوية" [ref=e324]
+            - rowgroup [ref=e325]:
+              - row "بكالوريوس 9 45%" [ref=e326]:
+                - cell "بكالوريوس" [ref=e327]
+                - cell "9" [ref=e328]
+                - cell "45%" [ref=e329]
+              - row "ماجستير 5 25%" [ref=e330]:
+                - cell "ماجستير" [ref=e331]
+                - cell "5" [ref=e332]
+                - cell "25%" [ref=e333]
+              - row "دبلوم 3 15%" [ref=e334]:
+                - cell "دبلوم" [ref=e335]
+                - cell "3" [ref=e336]
+                - cell "15%" [ref=e337]
+              - row "دكتوراه 3 15%" [ref=e338]:
+                - cell "دكتوراه" [ref=e339]
+                - cell "3" [ref=e340]
+                - cell "15%" [ref=e341]
+              - row "الإجمالي 20 100%" [ref=e342]:
+                - cell "الإجمالي" [ref=e343]
+                - cell "20" [ref=e344]
+                - cell "100%" [ref=e345]
+          - generic [ref=e346]:
+            - strong [ref=e347]: "📝 تعقيب تحليلي:"
+            - text: يتضح من الجدول أن أعلى نسبة كانت لفئة (بكالوريوس) بنسبة (٤٥%)، يليها فئة (ماجستير) بنسبة (٢٥%) وهو ما يشكل ربع عينة البحث، وأخيراً تساوت كلٌّ من (دبلوم) و(دكتوراه) بنسبة (١٥%) لكل منهما.
+      - generic [ref=e349]:
+        - generic [ref=e350]: 💡 الخلاصة العامة للاستبيان
+        - generic [ref=e351]: "الملخص التنفيذي للتقرير: إحصائيات التقرير: - عدد المحاور: ١ - عدد الأسئلة التحليلية: ٥ - عدد الأسئلة العامة: ٣ أبرز النتائج: - أعلى محور تقييماً: 'المجموعة 1' (٢.١٨)"
+      - generic [ref=e352]:
+        - button "⬅️ العودة للإعدادات" [ref=e353] [cursor=pointer]
+        - generic [ref=e354]:
+          - button "📥 تصدير جميع النتائج (XLSX)" [ref=e355] [cursor=pointer]
+          - button "🔄 تحليل استبيان جديد" [ref=e356] [cursor=pointer]
+  - contentinfo [ref=e42]:
+    - generic [ref=e43]: Survey Analyzer Pro v1.0 — محلل الاستبيانات الإلكترونية
+    - generic [ref=e44]:
+      - generic [ref=e45]: "تطوير:"
+      - generic [ref=e46]: Ahmed Akl
+      - generic [ref=e47]: "|"
+      - generic [ref=e48]: Classic for Computer Services (CCS)
+      - generic [ref=e49]: "|"
+      - link "📧 ahmedakl.classic@gmail.com" [ref=e50] [cursor=pointer]:
+        - /url: mailto:ahmedakl.classic@gmail.com
+      - generic [ref=e51]: "|"
+      - link "💬 01008875157" [ref=e52] [cursor=pointer]:
+        - /url: https://wa.me/2001008875157
+      - generic [ref=e53]: "|"
+      - link "📍 الموقع" [ref=e54] [cursor=pointer]:
+        - /url: https://maps.app.goo.gl/j2qG5vCzPNtPb9NM8

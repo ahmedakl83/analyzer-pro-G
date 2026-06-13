@@ -1,0 +1,51 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - img "Logo" [ref=e6]
+      - generic [ref=e7]:
+        - generic [ref=e8]: Survey Analyzer Pro
+        - generic [ref=e9]: محلل الاستبيانات الإلكترونية
+    - button "تبديل الوضع" [ref=e11] [cursor=pointer]:
+      - generic [ref=e12]: ☀️
+  - navigation [ref=e13]:
+    - generic [ref=e15]:
+      - generic [ref=e16]: 📁
+      - text: رفع الملف
+    - generic [ref=e19]:
+      - generic [ref=e20]: ⚙️
+      - text: إعداد الأسئلة
+    - generic [ref=e23]:
+      - generic [ref=e24]: 🔍
+      - text: مراجعة ليكرت
+    - generic [ref=e27]:
+      - generic [ref=e28]: 📊
+      - text: عرض النتائج
+  - main [ref=e29]:
+    - generic [ref=e30]:
+      - generic [ref=e31]:
+        - heading "📁 رفع ملف الاستبيان" [level=2] [ref=e32]
+        - paragraph [ref=e33]: قم برفع ملف نتائج الاستبيان من Google Forms (CSV أو Excel)
+      - generic [ref=e34] [cursor=pointer]:
+        - generic [ref=e35]: 📊
+        - heading "اسحب الملف هنا أو انقر للاختيار" [level=3] [ref=e36]
+        - paragraph [ref=e37]: يدعم ملفات Google Forms المُصدّرة
+        - generic [ref=e38]:
+          - generic [ref=e39]: CSV
+          - generic [ref=e40]: XLSX
+          - generic [ref=e41]: XLS
+  - contentinfo [ref=e42]:
+    - generic [ref=e43]: Survey Analyzer Pro v1.0 — محلل الاستبيانات الإلكترونية
+    - generic [ref=e44]:
+      - generic [ref=e45]: "تطوير:"
+      - generic [ref=e46]: Ahmed Akl
+      - generic [ref=e47]: "|"
+      - generic [ref=e48]: Classic for Computer Services (CCS)
+      - generic [ref=e49]: "|"
+      - link "📧 ahmedakl.classic@gmail.com" [ref=e50] [cursor=pointer]:
+        - /url: mailto:ahmedakl.classic@gmail.com
+      - generic [ref=e51]: "|"
+      - link "💬 01008875157" [ref=e52] [cursor=pointer]:
+        - /url: https://wa.me/2001008875157
+      - generic [ref=e53]: "|"
+      - link "📍 الموقع" [ref=e54] [cursor=pointer]:
+        - /url: https://maps.app.goo.gl/j2qG5vCzPNtPb9NM8
