@@ -4,10 +4,7 @@ import { exportToDocx } from '../../utils/docxExporter';
 import { exportGroupToZip } from '../../utils/zipExporter';
 import {
   generateDemographicCommentary,
-  generateAdvancedDemographicCommentary,
   generateLikertCommentary,
-  generateAdvancedLikertCommentary,
-  generateComparativeLikertCommentary,
   generateOverallCommentary,
 } from '../../utils/commentaryUtils';
 import type { DemographicResult, PairedDemographicResult } from '../../types/survey';
@@ -130,7 +127,6 @@ export default function AnalysisView() {
   const { demographicResults, pairedDemographicResults, likertResults } = state;
   const [activeTab, setActiveTab] = useState<'demographic' | 'likert'>('demographic');
   const [isExporting, setIsExporting] = useState(false);
-  const [commentaryMode, setCommentaryMode] = useState<'basic' | 'advanced'>('basic');
 
 
 
@@ -232,20 +228,6 @@ export default function AnalysisView() {
           >
             📄 تصدير Word (DOCX)
           </button>
-
-          {/* Commentary Mode Toggle */}
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>نمط التعليق:</span>
-            <select
-              value={commentaryMode}
-              onChange={(e) => setCommentaryMode(e.target.value as 'basic' | 'advanced')}
-              className="form-select"
-              style={{ width: 'auto', fontSize: '0.9rem' }}
-            >
-              <option value="basic">أساسي</option>
-              <option value="advanced">متقدم</option>
-            </select>
-          </div>
         </div>
       </div>
 
@@ -297,9 +279,7 @@ export default function AnalysisView() {
 
                 <div className="analysis-commentary">
                   <strong>📝 تعقيب تحليلي: </strong>
-                  {commentaryMode === 'advanced'
-                    ? generateAdvancedDemographicCommentary(result)
-                    : generateDemographicCommentary(result)}
+                  {generateDemographicCommentary(result)}
                 </div>
               </div>
             );
@@ -365,28 +345,10 @@ export default function AnalysisView() {
 
               <div className="analysis-commentary">
                 <strong>📝 تعقيب تحليلي: </strong>
-                {commentaryMode === 'advanced'
-                  ? generateAdvancedLikertCommentary(group)
-                  : generateLikertCommentary(group)}
+                {generateLikertCommentary(group)}
               </div>
             </div>
           ))}
-
-          {/* Comparative Analysis */}
-          {commentaryMode === 'advanced' && likertResults.length > 1 && (
-            <div
-              className="card analysis-section"
-              style={{ borderRight: '4px solid var(--accent-500)' }}
-            >
-              <div className="analysis-question-title">📈 التحليل المقارن بين المحاور</div>
-              <div
-                className="analysis-commentary"
-                style={{ marginTop: '0.5rem', border: 'none', background: 'transparent', padding: 0 }}
-              >
-                {generateComparativeLikertCommentary(likertResults)}
-              </div>
-            </div>
-          )}
         </div>
       )}
 

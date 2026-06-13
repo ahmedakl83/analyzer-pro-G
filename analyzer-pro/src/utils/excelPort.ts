@@ -4,7 +4,6 @@ import {
   SurveyQuestion, 
   QuestionType, 
   LikertScale, 
-  SurveySession, 
   FormResponse 
 } from '../types/surveyFlow';
 const generateId = () => crypto.randomUUID();
@@ -155,102 +154,6 @@ export async function importTemplateFromExcel(buffer: ArrayBuffer, fileName: str
   };
 
   return { template, warnings };
-}
-
-/**
- * يصدّر نتائج جلسة التفريغ إلى ملف Excel يحتوي على ورقتي عمل.
- */
-export async function exportSessionToExcel(session: SurveySession, template: SurveyTemplate): Promise<ExcelJS.Buffer> {
-  const workbook = new ExcelJS.Workbook();
-  
-  // Sheet 1: Textual Results
-  const wsText = workbook.addWorksheet('النتائج النصية', { views: [{ rightToLeft: true }] });
-  _formatSheet(wsText, session, template, 'text');
-
-  // Sheet 2: Numeric Results
-  const wsNumeric = workbook.addWorksheet('النتائج الرقمية', { views: [{ rightToLeft: true }] });
-  _formatSheet(wsNumeric, session, template, 'numeric');
-
-  return await workbook.xlsx.writeBuffer();
-}
-
-function _formatSheet(ws: ExcelJS.Worksheet, session: SurveySession, template: SurveyTemplate, mode: 'text' | 'numeric') {
-  // Styles
-  const headerFill: ExcelJS.Fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1F4E79' } };
-  const headerFont: Partial<ExcelJS.Font> = { bold: true, color: { argb: 'FFFFFFFF' }, size: 11 };
-  const altFill: ExcelJS.Fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD6E4F0' } };
-  const centerAlign: Partial<ExcelJS.Alignment> = { horizontal: 'center', vertical: 'middle', wrapText: true };
-  const rightAlign: Partial<ExcelJS.Alignment> = { horizontal: 'right', vertical: 'middle', wrapText: true };
-  const thinBorder: Partial<ExcelJS.Borders> = {
-    top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' }
-  };
-
-  // Header Row
-  const headerRow = ws.getRow(1);
-  headerRow.height = 30;
-
-  // First Cell: ID
-  const idCell = headerRow.getCell(1);
-  idCell.value = "رقم الاستمارة";
-  idCell.fill = headerFill;
-  idCell.font = headerFont;
-  idCell.alignment = centerAlign;
-  idCell.border = thinBorder;
-  ws.getColumn(1).width = 16;
-
-  const questions = [...template.questions].sort((a, b) => a.columnIndex - b.columnIndex);
-
-  questions.forEach((q, idx) => {
-    const cell = headerRow.getCell(idx + 2);
-    cell.value = q.text;
-    cell.fill = headerFill;
-    cell.font = headerFont;
-    cell.alignment = centerAlign;
-    cell.border = thinBorder;
-    ws.getColumn(idx + 2).width = Math.max(20, q.text.length + 4);
-  });
-
-  // Data Rows
-  session.forms.forEach((form, fIdx) => {
-    const rowNum = fIdx + 2;
-    const row = ws.getRow(rowNum);
-    const useAlt = fIdx % 2 === 1;
-
-    // Form ID
-    const numCell = row.getCell(1);
-    numCell.value = form.formIndex + 1;
-    numCell.alignment = centerAlign;
-    numCell.border = thinBorder;
-    if (useAlt) numCell.fill = altFill;
-
-    // Answers
-    questions.forEach((q, qIdx) => {
-      const rawAnswer = form.answers[q.id] || "";
-      let displayValue: any = rawAnswer;
-
-      if (mode === 'numeric' && rawAnswer) {
-        if (q.questionType === QuestionType.DEMOGRAPHIC_SINGLE || q.questionType === QuestionType.LIKERT) {
-          const idx = q.answers.indexOf(rawAnswer);
-          if (idx !== -1) displayValue = idx + 1;
-        } else if (q.questionType === QuestionType.DEMOGRAPHIC_MULTIPLE) {
-          const selected = rawAnswer.split(",").map(s => s.trim()).filter(Boolean);
-          const indices = selected.map(s => {
-            const idx = q.answers.indexOf(s);
-            return idx !== -1 ? (idx + 1).toString() : s;
-          });
-          displayValue = indices.join(",");
-        }
-      }
-
-      const cell = row.getCell(qIdx + 2);
-      cell.value = displayValue;
-      cell.alignment = typeof displayValue === 'string' ? rightAlign : centerAlign;
-      cell.border = thinBorder;
-      if (useAlt) cell.fill = altFill;
-    });
-  });
-
-  ws.views = [{ state: 'frozen', xSplit: 0, ySplit: 1 }];
 }
 
 /**

@@ -6,10 +6,6 @@ export function generateDemographicCommentary(result: DemographicResult): string
   return TableCommentService.generateGeneralComment(sorted);
 }
 
-export function generateAdvancedDemographicCommentary(result: DemographicResult): string {
-  return TableCommentService.generateAdvancedDemographicComment(result);
-}
-
 /**
  * تعقيب على الأسئلة المقارنة (Paired Demographic):
  * قسم لكل بيان — يسرد النسب تنازلياً كما في الأسئلة الديموغرافية العادية.
@@ -98,24 +94,12 @@ export function generateLikertCommentary(group: LikertGroupResult): string {
   return TableCommentService.generateGroupComment(group);
 }
 
-export function generateAdvancedLikertCommentary(group: LikertGroupResult): string {
-  return TableCommentService.generateAdvancedGroupComment(group);
-}
-
-export function generateComparativeLikertCommentary(groups: LikertGroupResult[]): string {
-  return TableCommentService.generateComparativeComment(groups);
-}
-
 export function generateOverallCommentary(demographicResults: DemographicResult[], likertResults: LikertGroupResult[]): string {
   return TableCommentService.generateReportSummary(likertResults, demographicResults);
 }
 
 export function generateReportSummary(demographicResults: DemographicResult[], likertResults: LikertGroupResult[]): string {
   return TableCommentService.generateReportSummary(likertResults, demographicResults);
-}
-
-export function generateCustomScaleCommentary(question: { text: string; responses: any[] }): string {
-  return TableCommentService.generateCustomScaleComment(question);
 }
 
 export function convertToIndicNumbers(input: string | number): string {

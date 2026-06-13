@@ -1,10 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useSurvey } from '../../context/SurveyContext';
-import { exportSessionToExcel } from '../../utils/excelPort';
-import { save } from '@tauri-apps/plugin-dialog';
-import { writeFile } from '@tauri-apps/plugin-fs';
 import { QuestionType } from '../../types/surveyFlow';
-import { parseBuffer } from '../../utils/fileParser';
 
 export default function DataEntry() {
   const { state, dispatch } = useSurvey();
@@ -23,8 +19,6 @@ export default function DataEntry() {
     [...activeTemplate.questions].sort((a, b) => a.columnIndex - b.columnIndex),
     [activeTemplate.questions]
   );
-
-  const [saving, setSaving] = useState(false);
 
   const handleAnswerChange = (questionId: string, value: string) => {
     const updatedForms = [...activeSession.forms];
@@ -69,48 +63,12 @@ export default function DataEntry() {
     }
   };
 
-  const handleExport = async () => {
-    try {
-      setSaving(true);
-      const buffer = await exportSessionToExcel(activeSession, activeTemplate);
-      
-      const path = await save({
-        defaultPath: `${activeSession.name}.xlsx`,
-        filters: [{ name: 'Excel', extensions: ['xlsx'] }]
-      });
-
-      if (path) {
-        await writeFile(path, new Uint8Array(buffer));
-        
-        if (confirm("تم حفظ الملف بنجاح. هل تريد البدء في تحليل هذا الملف الآن؟")) {
-          try {
-            const surveyData = await parseBuffer(buffer, path.split(/[\\/]/).pop() || "survey.xlsx");
-            dispatch({ type: 'SET_SURVEY_DATA', payload: surveyData });
-            dispatch({ type: 'SET_STEP', payload: 'upload' });
-            dispatch({ type: 'SET_ACTIVE_TAB', payload: 'analysis' });
-          } catch (err: any) {
-            alert("حدث خطأ أثناء معالجة الملف للتحليل: " + err.message);
-          }
-        }
-      }
-    } catch (err: any) {
-      alert("فشل التصدير: " + err.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
   return (
     <div className="data-entry">
       <div className="entry-header">
         <div className="session-info">
           <h2>📝 تفريغ البيانات</h2>
           <p>{activeTemplate.name} — استمارة رقم {activeSession.currentFormIndex + 1} من {activeSession.totalForms}</p>
-        </div>
-        <div className="entry-actions">
-          <button className="btn btn-secondary" onClick={handleExport} disabled={saving}>
-            {saving ? 'جاري الحفظ...' : '💾 تصدير لـ Excel'}
-          </button>
         </div>
       </div>
 
