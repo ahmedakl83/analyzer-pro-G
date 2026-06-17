@@ -1042,12 +1042,12 @@ export async function buildDocumentXml(
 
       // التعقيب
       const commentary = generateDemographicCommentary(result);
-      const chartRef = `والشكل البياني (${toIndic(tableCounter)}) `;
+      const chartRef = `وشكل (${toIndic(tableCounter)}) `;
       const PREFIXES = ['يتضح من الجدول أن ', 'يتضح من الجدول أنه ', 'أظهرت النتائج ', 'يستحوذ '];
       let body = commentary.trim();
       for (const p of PREFIXES) { if (body.startsWith(p)) { body = body.slice(p.length); break; } }
       if (body.startsWith('أن ')) body = body.slice(3);
-      const fullCommentary = `يتضح من الجدول (${toIndic(tableCounter)}) ${chartRef}: أن ${body}`.replace(/\s{2,}/g, ' ');
+      const fullCommentary = `يتضح من جدول (${toIndic(tableCounter)}) ${chartRef}أن ${body}`.replace(/\s{2,}/g, ' ');
       bodyParts.push(commentaryPara(fullCommentary));
 
       // بناء chart XML

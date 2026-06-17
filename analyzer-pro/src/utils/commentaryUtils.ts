@@ -3,7 +3,7 @@ import { TableCommentService } from './tableCommentService';
 
 export function generateDemographicCommentary(result: DemographicResult): string {
   const sorted = [...result.responses].sort((a, b) => b.percentage - a.percentage);
-  return TableCommentService.generateGeneralComment(sorted);
+  return TableCommentService.generateGeneralComment(result.question, sorted);
 }
 
 /**
@@ -28,13 +28,13 @@ export function generatePairedCommentary(
     return String(n).replace(/[0-9]/g, (d) => map[d] ?? d);
   }
 
-  const chartRef = hasChart ? `والشكل البياني (${toIndic(tableNum)}) ` : '';
+  const chartRef = hasChart ? `وشكل (${toIndic(tableNum)}) ` : '';
   const parts: string[] = [];
 
   result.variants.forEach((variant, idx) => {
     const sorted = [...variant.responses].sort((a, b) => b.percentage - a.percentage);
     // نستخدم generateGeneralComment ثم نستخرج الجزء بعد "يتضح من الجدول أن"
-    const raw = TableCommentService.generateGeneralComment(sorted);
+    const raw = TableCommentService.generateGeneralComment(result.baseLabel, sorted);
 
     // إزالة المقدمة الثابتة لاستخراج متن التعقيب
     const PREFIXES = [
@@ -52,7 +52,7 @@ export function generatePairedCommentary(
     if (idx === 0) {
       // القسم الأول: يتضح من الجدول (x) والشكل البياني (x): أن [البيان]: ...
       parts.push(
-        `يتضح من الجدول (${toIndic(tableNum)}) ${chartRef}: أن ${variant.label}: ${body}`
+        `يتضح من جدول (${toIndic(tableNum)}) ${chartRef}أن ${variant.label}: ${body}`
       );
     } else {
       // الأقسام التالية: أما [البيان]: ...

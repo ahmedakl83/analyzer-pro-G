@@ -47,7 +47,7 @@ export async function exportGroupToZip(
     if (demographicRange) {
       const allRawUserDemographics = analyzeDemographics(userSurveyData, demographicRange);
 
-      const pairedGroups = detectPairedQuestions(userSurveyData.headers, demographicRange.startIndex, demographicRange.endIndex);
+      const pairedGroups = detectPairedQuestions(userSurveyData.headers, demographicRange.startIndex, demographicRange.endIndex, demographicRange.ignoredQuestions);
       const pairedIndices = getPairedColumnIndices(pairedGroups);
 
       const rawUserDemographics = allRawUserDemographics.filter(r => 

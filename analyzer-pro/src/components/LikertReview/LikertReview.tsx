@@ -83,15 +83,18 @@ export default function LikertReview() {
     // Run analysis
     try {
       // كشف وتحليل الأسئلة المقارنة
-      const { startIndex, endIndex } = state.demographicRange;
-      const pairedGroups = detectPairedQuestions(surveyData.headers, startIndex, endIndex);
+      const { startIndex, endIndex, ignoredQuestions } = state.demographicRange;
+      const pairedGroups = detectPairedQuestions(surveyData.headers, startIndex, endIndex, ignoredQuestions);
       const pairedResults = analyzePairedDemographics(surveyData, pairedGroups);
       const pairedIndices = getPairedColumnIndices(pairedGroups);
       dispatch({ type: 'SET_PAIRED_DEMOGRAPHIC_RESULTS', payload: pairedResults });
 
-      // التحليل الديموغرافي العادي (مع استبعاد المقارنة)
+      // التحليل الديموغرافي العادي (مع استبعاد المقارنة وعمود المجموعة)
       const allDemoResults = analyzeDemographics(surveyData, state.demographicRange);
-      const demoResults = allDemoResults.filter(r => !pairedIndices.has(r.questionIndex));
+      const demoResults = allDemoResults.filter(r => 
+        !pairedIndices.has(r.questionIndex) && 
+        !(state.isGroupSurvey && state.groupUserIdColumnIndex === r.questionIndex)
+      );
       dispatch({ type: 'SET_DEMOGRAPHIC_RESULTS', payload: demoResults });
 
       const updatedLikertGroups = state.likertGroups.map(g => {

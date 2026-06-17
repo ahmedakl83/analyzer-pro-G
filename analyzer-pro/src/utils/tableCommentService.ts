@@ -95,6 +95,150 @@ export class TableCommentService {
     return groups;
   }
 
+  private static getSemanticConfig(question: string): { basePhrase: string; suffix: string; transformAns: (ans: string) => string } {
+    const q = question.replace(/\s*\[.*?\]|\s*\(.*?\)/g, '').trim();
+    const defaultTransform = (ans: string) => `(${ans.trim()})`;
+
+    if (q.includes("مكان السكن") || q.includes("الإقامة") || q.includes("السكن")) {
+      return {
+        basePhrase: "من يعيشون في",
+        suffix: "",
+        transformAns: (ans) => {
+          let a = ans.replace(/[\(\)]/g, '').trim();
+          if (!a.startsWith('ال')) a = 'ال' + a;
+          return a;
+        }
+      };
+    }
+
+    if (q.includes("النوع") || q.includes("الجنس")) {
+      return {
+        basePhrase: "", 
+        suffix: "",
+        transformAns: (ans) => {
+          const a = ans.replace(/[\(\)]/g, '').trim();
+          if (a === "أنثى") return "إناث";
+          if (a === "ذكر") return "ذكور";
+          return a;
+        }
+      };
+    }
+
+    if (q.includes("السن") || q.includes("العمر") || q.includes("أعمار")) {
+      return {
+        basePhrase: "من أعمارهم",
+        suffix: " عام",
+        transformAns: defaultTransform
+      };
+    }
+
+    if (q.includes("صف") || q.includes("مرحلة") || q.includes("مستوى دراسي")) {
+      return {
+        basePhrase: "طلاب",
+        suffix: "",
+        transformAns: defaultTransform
+      };
+    }
+
+    if (q.includes("حجم الأسرة") || q.includes("عدد أفراد الأسرة")) {
+      return {
+        basePhrase: "أفراد عينة البحث الذين ينتمون إلى أسر حجمها",
+        suffix: "",
+        transformAns: defaultTransform
+      };
+    }
+
+    if (q.includes("ترتيب")) {
+      return {
+        basePhrase: "الترتيب بين الأخوة",
+        suffix: "",
+        transformAns: defaultTransform
+      };
+    }
+
+    if (q.includes("زواج")) {
+      return {
+        basePhrase: "من كانت مدة زواج والديهم",
+        suffix: "",
+        transformAns: defaultTransform
+      };
+    }
+
+    if (q.includes("مهنة") || q.includes("عمل") || q.includes("وظيفة")) {
+      return {
+        basePhrase: "أصحاب مهنة",
+        suffix: "",
+        transformAns: defaultTransform
+      };
+    }
+
+    if (q.includes("دخل") || q.includes("راتب")) {
+      return {
+        basePhrase: "أصحاب الدخل الشهري",
+        suffix: "",
+        transformAns: defaultTransform
+      };
+    }
+
+    if (q.includes("غياب")) {
+      return {
+        basePhrase: "من فترات غياب آبائهم",
+        suffix: "",
+        transformAns: defaultTransform
+      };
+    }
+
+    if (/^[يتم|يقضون|يلجؤون|يتعرضون|يفضلون|يعتبرون|يحصلون|يستخدمون|يغلب]/.test(q)) {
+      return {
+        basePhrase: `من ${q}`,
+        suffix: "",
+        transformAns: defaultTransform
+      };
+    }
+
+    if (q.split(' ').length > 2) {
+      return {
+        basePhrase: `من كان ${q}`,
+        suffix: "",
+        transformAns: defaultTransform
+      };
+    }
+
+    return {
+      basePhrase: "فئة",
+      suffix: "",
+      transformAns: defaultTransform
+    };
+  }
+
+  private static applyPreposition(prep: 'لـ ' | 'بين كلٌّ من ' | '', phrase: string): string {
+    if (prep === 'لـ ') {
+      let p = phrase.trim();
+      if (!p) return ''; 
+      if (p.startsWith('ال')) return 'لل' + p.substring(2);
+      if (p.startsWith('أ')) return 'لأ' + p.substring(1);
+      if (p.startsWith('إ')) return 'لإ' + p.substring(1);
+      if (p.startsWith('ا')) return 'لا' + p.substring(1);
+      if (p.startsWith('من ')) return 'لمن ' + p.substring(3);
+      return 'ل' + p; 
+    }
+    return prep + phrase;
+  }
+
+  private static formatSemanticGroup(
+    config: { basePhrase: string; suffix: string; transformAns: (ans: string) => string },
+    items: ResponseItem[],
+    prep: 'لـ ' | 'بين كلٌّ من ' | ''
+  ): string {
+    const joinedAnswers = items.map(r => config.transformAns(r.answer)).join(" و");
+    if (!config.basePhrase) {
+       if (prep === 'بين كلٌّ من ') return `${prep}${joinedAnswers}${config.suffix}`;
+       return `${joinedAnswers}${config.suffix}`;
+    }
+    const preppedBase = prep ? this.applyPreposition(prep, config.basePhrase) : config.basePhrase;
+    return `${preppedBase} ${joinedAnswers}${config.suffix}`.replace(/\s+/g, ' ').trim();
+  }
+
   /**
    * إنشاء تعليق تحليلي للبيانات الديموغرافية وفق قواعد الصياغة الاحترافية:
    * - الترتيب تنازلياً من الأعلى للأقل
@@ -102,7 +246,7 @@ export class TableCommentService {
    * - استخدام الكسور الشهيرة (نصف، ثلث، ربع، ثلاثة أرباع، ثلثا)
    * - معالجة الحالات الخاصة: 100%، 50/50، أغلبية كاسحة، تقارب شديد، انعدام
    */
-  static generateGeneralComment(sortedRows: ResponseItem[]): string {
+  static generateGeneralComment(questionText: string, sortedRows: ResponseItem[]): string {
     if (sortedRows.length === 0) return "";
 
     // استبعاد الفئات ذات النسبة 0% ما لم يكن الجدول ثنائياً
@@ -136,29 +280,35 @@ export class TableCommentService {
     // ─── البناء العام: تجميع المتساويات ثم السرد التنازلي ───────────────────
     const groups = this.groupByPercentage(sorted);
     const sb: string[] = [];
+    const semanticConfig = this.getSemanticConfig(questionText);
 
     groups.forEach((grp, index) => {
       const pctStr = this.formatDemoPct(grp.percentage);
-      const names = grp.items.map(r => `(${r.answer})`).join(" و");
 
       if (index === 0) {
         if (grp.items.length === 1) {
-          sb.push(`يتضح من الجدول أن أعلى نسبة كانت لفئة ${names} بنسبة ${pctStr}`);
+          const phrase = this.formatSemanticGroup(semanticConfig, grp.items, 'لـ ');
+          sb.push(`يتضح من الجدول أن النسبة الأعلى كانت ${phrase} بنسبة ${pctStr}`);
         } else {
-          sb.push(`يتضح من الجدول أنه تساوت كلٌّ من ${names} في الصدارة بنسبة ${pctStr} لكل منهما`);
+          const phrase = this.formatSemanticGroup(semanticConfig, grp.items, 'بين كلٌّ من ');
+          sb.push(`يتضح من الجدول أن النسبة الأعلى كانت بالتساوي ${phrase} في الصدارة بنسبة ${pctStr} لكل منهما`);
         }
       } else if (index === groups.length - 1 && groups.length > 2) {
         if (grp.items.length === 1) {
-          sb.push(`، وأخيراً فئة ${names} بنسبة ${pctStr}`);
+          const phrase = this.formatSemanticGroup(semanticConfig, grp.items, '');
+          sb.push(`، وأخيراً ${phrase} بنسبة ${pctStr}`);
         } else {
-          sb.push(`، وأخيراً تساوت كلٌّ من ${names} بنسبة ${pctStr} لكل منهما`);
+          const phrase = this.formatSemanticGroup(semanticConfig, grp.items, '');
+          sb.push(`، وأخيراً تساوى كلٌّ من ${phrase} بنسبة ${pctStr} لكل منهما`);
         }
       } else {
         const connector = index === 1 ? "، يليها " : "، ثم ";
         if (grp.items.length === 1) {
-          sb.push(`${connector}فئة ${names} بنسبة ${pctStr}`);
+          const phrase = this.formatSemanticGroup(semanticConfig, grp.items, '');
+          sb.push(`${connector}${phrase} بنسبة ${pctStr}`);
         } else {
-          sb.push(`${connector}تساوت كلٌّ من ${names} بنسبة ${pctStr} لكل منهما`);
+          const phrase = this.formatSemanticGroup(semanticConfig, grp.items, '');
+          sb.push(`${connector}تساوى كلٌّ من ${phrase} بنسبة ${pctStr} لكل منهما`);
         }
       }
     });
@@ -174,19 +324,23 @@ export class TableCommentService {
       const sbMain: string[] = [];
       mainGroups.forEach((grp, index) => {
         const pctStr = this.formatDemoPct(grp.percentage);
-        const names = grp.items.map(r => `(${r.answer})`).join(" و");
+        
         if (index === 0) {
           if (grp.items.length === 1) {
-            sbMain.push(`يتضح من الجدول أن أعلى نسبة كانت لفئة ${names} بنسبة ${pctStr}`);
+            const phrase = this.formatSemanticGroup(semanticConfig, grp.items, 'لـ ');
+            sbMain.push(`يتضح من الجدول أن النسبة الأعلى كانت ${phrase} بنسبة ${pctStr}`);
           } else {
-            sbMain.push(`يتضح من الجدول أنه تساوت كلٌّ من ${names} في الصدارة بنسبة ${pctStr} لكل منهما`);
+            const phrase = this.formatSemanticGroup(semanticConfig, grp.items, 'بين كلٌّ من ');
+            sbMain.push(`يتضح من الجدول أن النسبة الأعلى كانت بالتساوي ${phrase} في الصدارة بنسبة ${pctStr} لكل منهما`);
           }
         } else {
           const connector = index === 1 ? "، يليها " : "، ثم ";
           if (grp.items.length === 1) {
-            sbMain.push(`${connector}فئة ${names} بنسبة ${pctStr}`);
+            const phrase = this.formatSemanticGroup(semanticConfig, grp.items, '');
+            sbMain.push(`${connector}${phrase} بنسبة ${pctStr}`);
           } else {
-            sbMain.push(`${connector}تساوت كلٌّ من ${names} بنسبة ${pctStr} لكل منهما`);
+            const phrase = this.formatSemanticGroup(semanticConfig, grp.items, '');
+            sbMain.push(`${connector}تساوى كلٌّ من ${phrase} بنسبة ${pctStr} لكل منهما`);
           }
         }
       });
