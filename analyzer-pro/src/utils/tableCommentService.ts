@@ -382,139 +382,190 @@ export class TableCommentService {
   //  يعتمد على التعابير النمطية ومعالجة كامل كلمات الجملة.
   // ════════════════════════════════════════════════════════════════════════
 
-  /** كلمات تبدأ بهمزة لكنها ليست أفعالاً للمتكلّم */
+  /** كلمات تبدأ بهمزة لكنها ليست أفعالاً للمتكلّم (أسماء/صفات/أدوات) */
   private static readonly ALIF_NON_VERBS = new Set([
     'أن', 'أنّ', 'أو', 'أي', 'أيّ', 'أحد', 'إحدى', 'أكثر', 'أغلب', 'أقل',
     'أولى', 'أول', 'آخر', 'أبرز', 'أهم', 'أنا', 'أيضاً', 'أيضا',
     'أحياناً', 'أحيانا', 'أمام', 'أثناء', 'أبدا', 'أبداً', 'أفضل', 'أسوأ', 'أحسن',
-    'أصعب', 'أسهل', 'أكبر', 'أصغر', 'أطول', 'أقصر', 'أغلى', 'أرخص', 'أسرع', 'أبطأ'
+    'أصعب', 'أسهل', 'أكبر', 'أصغر', 'أطول', 'أقصر', 'أغلى', 'أرخص', 'أسرع', 'أبطأ',
+    // أسماء شائعة تبدأ بهمزة (مفرد/جمع/مصدر) — يجب ألّا تُصرَّف كأفعال
+    'أفراد', 'أبناء', 'أشياء', 'أمور', 'أعمال', 'أصدقاء', 'أوقات', 'أهداف', 'أسماء',
+    'أجزاء', 'أداء', 'أسرة', 'أخطاء', 'آراء', 'آمال', 'أنشطة', 'أدوات', 'أنواع',
+    'أماكن', 'أطفال', 'أولاد', 'أساس', 'أساليب', 'أسلوب', 'أنظمة', 'أجهزة', 'أهل'
   ]);
 
-  /** خريطة ضمائر المتكلّم المفرد إلى جمع الغائب (للاستخدام المباشر للكلمات المستقلة) */
+  /** سياقات تُجيز ورود فعل بعدها (لتمييز فعل المتكلّم من الاسم المبدوء بهمزة) */
+  private static readonly VERB_LICENSERS = new Set([
+    'عندما', 'حين', 'حينما', 'إذا', 'إذ', 'و', 'ف', 'ثم', 'لا', 'لم', 'لن',
+    'حتى', 'كي', 'لكي', 'أن', 'بأن', 'وأن', 'ريثما', 'بينما', 'عندئذ', 'مهما',
+    'كلما', 'لو', 'حيث', 'التي', 'الذي', 'الذين', 'اللاتي', 'اللذين', 'ما', 'مما', 'من',
+    'بما', 'كما', 'وما', 'فما', 'عمّا', 'عما'
+  ]);
+
+  /** خريطة ضمائر المتكلّم المفرد إلى جمع الغائب (كلمات كاملة) */
   private static readonly PRONOUN_TO_PLURAL: Record<string, string> = {
-    'لي': 'لهم', 'إليّ': 'إليهم', 'إلي': 'إليهم', 'عليّ': 'عليهم', 'علي': 'عليهم',
-    'عندي': 'عندهم', 'لديّ': 'لديهم', 'لدي': 'لديهم', 'معي': 'معهم', 'مني': 'منهم',
-    'عني': 'عنهم', 'بي': 'بهم', 'فيّ': 'فيهم', 'أنا': 'هم', 'نحن': 'هم'
+    'لي': 'لهم', 'اليّ': 'إليهم', 'إليّ': 'إليهم', 'إلي': 'إليهم',
+    'عليّ': 'عليهم', 'علي': 'عليهم', 'عندي': 'عندهم', 'لديّ': 'لديهم', 'لدي': 'لديهم',
+    'معي': 'معهم', 'مني': 'منهم', 'عني': 'عنهم', 'بي': 'بهم', 'فيّ': 'فيهم', 'في': 'في',
+    'أنا': 'هم', 'نحن': 'هم', 'نفسي': 'أنفسهم', 'بنفسي': 'بأنفسهم',
+    'أنني': 'أنهم', 'بأنني': 'بأنهم', 'إنني': 'إنهم', 'إني': 'إنهم', 'أني': 'أنهم'
   };
 
-  /** هل الكلمة فعل مضارع للمتكلّم المفرد (يبدأ بهمزة قطع مفتوحة أو ممدودة)؟ */
-  private static isFirstPersonVerb(word: string): boolean {
-    const w = word.replace(/[.،,؛()"]/g, '').trim();
-    if (w.length < 3) return false;
-    const c0 = w[0];
-    if (c0 !== 'أ' && c0 !== 'آ') return false;
-    if (this.ALIF_NON_VERBS.has(w)) return false;
+  /** كلمات منتهية بياء لا تُعامل كياء متكلّم (أدوات/موصولات/صفات نسبة) */
+  private static readonly KEEP_YA = new Set([
+    'التي', 'الذي', 'الذين', 'اللاتي', 'اللواتي', 'اللذين', 'اللتين',
+    'في', 'كي', 'لكي', 'هي', 'وهي', 'فهي',
+    // صفات نسبة شائعة (تنتهي بياء لكنها ليست ملكية)
+    'عاطفي', 'اجتماعي', 'يومي', 'رقمي', 'ديني', 'علمي', 'أساسي', 'مدرسي',
+    'سلبي', 'إيجابي', 'طبيعي', 'يدوي', 'ذاتي'
+  ]);
+
+  /** خبر "كان" يُجمع عند جمع الفاعل (يكونون حزينا ← حزينين) */
+  private static readonly KANA_PRED: Record<string, string> = {
+    'حزينا': 'حزينين', 'حزيناً': 'حزينين', 'خائفا': 'خائفين', 'خائفاً': 'خائفين',
+    'وحيدا': 'وحيدين', 'وحيداً': 'وحيدين', 'غاضبا': 'غاضبين', 'غاضباً': 'غاضبين',
+    'قلقا': 'قلقين', 'قلقاً': 'قلقين', 'سعيدا': 'سعداء', 'سعيداً': 'سعداء'
+  };
+
+  /** إزالة التشكيل والتطويل للمقارنة المعجمية */
+  private static stripTashkeel(s: string): string {
+    return s.replace(/[ً-ْـ]/g, '');
+  }
+
+  /** هل الكلمة فعل مضارع للمتكلّم المفرد (يبدأ بهمزة، وليست اسماً)؟ */
+  private static isVerbToken(bare: string): boolean {
+    if (bare.length < 3) return false;
+    if (bare[0] !== 'أ' && bare[0] !== 'آ') return false;
+    if (this.ALIF_NON_VERBS.has(bare)) return false;
+    const last = bare[bare.length - 1];
+    if (last === 'ة' || last === 'ء' || last === 'ي') return false; // علامات أسماء
     return true;
+  }
+
+  /** هل الكلمة اسم مضاف إلى ياء المتكلّم (ملكية)؟ */
+  private static isPossessiveYa(bare: string): boolean {
+    if (bare.length < 3) return false;
+    if (!bare.endsWith('ي')) return false;
+    if (bare[0] === 'ي' || bare[0] === 'ت') return false; // غالباً فعل مضارع ناقص (يبدي/يعطي/تأتي)
+    if (bare.startsWith('ال')) return false;       // معرّف بأل ← غالباً صفة/نسبة
+    if (this.KEEP_YA.has(bare)) return false;
+    const before = bare[bare.length - 2];
+    if (before === 'ا' || before === 'و' || before === 'ي') return false; // ألف/جمع
+    return true;
+  }
+
+  /** تحويل الفعل المثنّى إلى المفرد (يمتلكان ← يمتلك، يمكنهما ← يمكنهم) */
+  private static deDualVerb(w: string): string {
+    if (w.endsWith('هما')) return w.slice(0, -3) + 'هم';
+    if (w.endsWith('ان') && w.length > 3) return w.slice(0, -2);
+    if (w.endsWith('ا') && w.length > 3) return w.slice(0, -1);
+    return w;
   }
 
   /** تصريف فعل المتكلّم المفرد (أَفعَل) إلى الغائب جمع المذكّر (يَفعَلون) */
   private static conjugateVerbToPlural(verb: string): string {
-    const w = verb.replace(/[.،,؛()"]/g, '').trim();
+    let w = verb.replace(/[.،,؛():"«»]/g, '').trim();
     if (w.length < 2) return verb;
 
-    // استخراج الضمائر المتصلة (ها، ه، هم)
+    // واو/فاء العطف الملتصقة
+    let conjPrefix = '';
+    if ((w[0] === 'و' || w[0] === 'ف') && (w[1] === 'أ' || w[1] === 'آ')) {
+      conjPrefix = w[0]; w = w.slice(1);
+    }
+
+    // استخراج الضمائر المتصلة (ها، هم، ه)
     let suffix = '';
     let core = w;
     if (w.endsWith('ها')) { suffix = 'ها'; core = w.slice(0, -2); }
-    else if (w.endsWith('ه')) { suffix = 'ه'; core = w.slice(0, -1); }
     else if (w.endsWith('هم')) { suffix = 'هم'; core = w.slice(0, -2); }
+    else if (w.endsWith('ه')) { suffix = 'ه'; core = w.slice(0, -1); }
 
     const IRREGULAR: Record<string, string> = {
       'أرى': 'يرون', 'آتي': 'يأتون', 'أعي': 'يعون', 'أبغي': 'يبغون'
     };
 
-    if (IRREGULAR[core]) return IRREGULAR[core] + suffix;
-
-    let stem: string;
-    if (core[0] === 'آ') {
-      stem = 'يأ' + core.slice(1);
+    let conjugated: string;
+    if (IRREGULAR[core]) {
+      conjugated = IRREGULAR[core];
     } else {
-      stem = 'ي' + core.slice(1);
+      let stem = core[0] === 'آ' ? 'يأ' + core.slice(1) : 'ي' + core.slice(1);
+      const last = stem[stem.length - 1];
+      conjugated = (last === 'ى' || last === 'ي' || last === 'و' || last === 'ا')
+        ? stem.slice(0, -1) + 'ون'
+        : stem + 'ون';
     }
 
-    const last = stem[stem.length - 1];
-    let conjugated = stem + 'ون';
-    if (last === 'ى' || last === 'ي' || last === 'و' || last === 'ا') {
-      conjugated = stem.slice(0, -1) + 'ون';
-    }
-
-    const prefixPunct = verb.match(/^[.،,؛()"]+/)?.[0] || '';
-    const suffixPunct = verb.match(/[.،,؛()"]+$/)?.[0] || '';
-
-    return prefixPunct + conjugated + suffix + suffixPunct;
+    const prefixPunct = verb.match(/^[.،,؛():"«»]+/)?.[0] || '';
+    const suffixPunct = verb.match(/[.،,؛():"«»]+$/)?.[0] || '';
+    return prefixPunct + conjPrefix + conjugated + suffix + suffixPunct;
   }
 
   /**
-   * دالة متقدمة لمعالجة وتحويل الجملة بالكامل:
-   * 1. تحويل أفعال المتكلم إلى الغائب جمع
-   * 2. تحويل الضمائر المتصلة (ني -> هم)
-   * 3. تحويل صفات الملكية (ياء المتكلم -> هم)
-   * 4. تحويل الضمائر المنفصلة
+   * المحرّك العام: تحويل الجملة بالكامل من صيغة المتكلّم إلى الغائب جمع المذكّر
+   * وفق قواعد العربية — لا يقتصر على الفعل الأول:
+   * 1. حذف الحشو الافتتاحي (أرى/أجد/أعتقد/أظن + أن)
+   * 2. نمط "والداي + فعل مثنّى" → "فعل مفرد + والديهم"
+   * 3. تصريف أفعال المتكلّم أينما وردت (في سياق فعلي) إلى الغائب جمع
+   * 4. تحويل الضمائر المتّصلة بالأفعال (ني/نا → هم)
+   * 5. تحويل ياء الملكية في الأسماء (ـي → ـهم) ومطابقة العدد
+   * 6. تحويل الضمائر المنفصلة والمطابقة العددية للأخبار
    */
   private static smartPluralizeArabicText(text: string): string {
-    // 1. إزالة الحشوات التعبيرية الافتتاحية
-    let processed = text.replace(/^(أرى|أجد|أعتقد|أظن)\s+أن\s+/g, '');
+    // 1. حذف الحشو الافتتاحي
+    let processed = text.replace(/^\s*(أرى|أجد|أعتقد|أظن)\s+أنّ?\s+/u, '').trim();
 
-    const words = processed.split(/(\s+)/);
-    
-    return words.map(tok => {
+    // 2. نمط "والداي + فعل مثنّى" → "فعل مفرد + والديهم ..."
+    const dual = processed.match(/^(والداي|والدايَ|والديَّ|والدي|والداى)\s+([يت]\S+)\s*(.*)$/u);
+    if (dual) {
+      const v = this.deDualVerb(dual[2].replace(/[.،,؛():"«»]/g, ''));
+      processed = `${v} والديهم ${dual[3]}`.trim();
+    }
+
+    const tokens = processed.split(/(\s+)/);
+    let firstWordSeen = false;
+    let prevBare = '';
+
+    const result = tokens.map(tok => {
       if (!tok.trim()) return tok;
-
-      const bare = tok.replace(/[.،,؛()"]/g, '');
+      const bare = this.stripTashkeel(tok.replace(/[.،,؛():"«»]/g, ''));
       if (!bare) return tok;
 
-      // 2. الضمائر المنفصلة
-      if (this.PRONOUN_TO_PLURAL[bare]) {
-        return tok.replace(bare, this.PRONOUN_TO_PLURAL[bare]);
-      }
+      const prev = prevBare;
+      const prevNoConj = prev.replace(/^[وف]/, '');
+      const isFirstWord = !firstWordSeen;
+      firstWordSeen = true;
+      prevBare = bare;
 
-      // 3. أفعال المتكلم (أفعل -> يفعلون)
-      if (this.isFirstPersonVerb(bare)) {
-        return this.conjugateVerbToPlural(tok);
-      }
+      const repl = (from: RegExp | string, to: string) => tok.replace(from, to);
 
-      // 4. أفعال الغائب المفرد المتصلة بياء المتكلم أو نا (يفعلني/يفعلنا -> يفعلهم)
-      if (bare.startsWith('ي') && bare.match(/(ني|نا)$/)) {
-        return tok.replace(/(ني|نا)$/, 'هم');
-      }
+      // أ. كلمة "والداي" الخاصة (المثنّى المضاف لياء المتكلّم)
+      if (['والداي', 'والدي', 'والداى', 'والدايَ', 'والديَّ'].includes(bare))
+        return tok.replace(/والدا?ي(?:َّ|َ)?/, 'والديهم');
 
-      // تحويل بعض الصفات من المفرد للجمع
-      const ADJ_MAP: Record<string, string> = {
-         'حزينا': 'حزينين', 'خائفا': 'خائفين', 'وحيدا': 'وحيدين',
-         'حزيناً': 'حزينين', 'خائفاً': 'خائفين', 'وحيداً': 'وحيدين'
-      };
-      if (ADJ_MAP[bare]) {
-        return tok.replace(bare, ADJ_MAP[bare]);
-      }
-      
-      // 5. الأسماء المتصلة بياء المتكلم (الملكية)
-      if (bare === 'والداي') return tok.replace('والداي', 'والديهم');
-      if (bare === 'والدي') return tok.replace('والدي', 'والدهم');
+      // ب. الضمائر المنفصلة / المركّبة
+      if (this.PRONOUN_TO_PLURAL[bare] && this.PRONOUN_TO_PLURAL[bare] !== bare)
+        return repl(bare, this.PRONOUN_TO_PLURAL[bare]);
 
-      const POSSESSIVE_NOUNS = new Set([
-         'مشاعري', 'أغراضي', 'عملي', 'وقتي', 'رأيي', 'صديقي', 'زميلي', 'معلمي', 
-         'مديري', 'أخي', 'أختي', 'أبي', 'أمي', 'نفسي', 'ذاتي', 'حياتي', 
-         'عمري', 'خاطري', 'شؤوني', 'مستقبلي', 'بيتي', 'منزلي', 'دوري', 'ملابسي',
-         'كتبي', 'أشيائي'
-      ]);
+      // ج. خبر "كان" بعد "يكونون/أكون" → جمع (أكون يُصرَّف إلى يكونون في نفس المرور)
+      if ((prev === 'يكونون' || prev === 'أكون' || prev === 'نكون') && this.KANA_PRED[bare])
+        return repl(bare, this.KANA_PRED[bare]);
 
-      if (POSSESSIVE_NOUNS.has(bare)) {
-         return tok.replace(/ي(?=[.،,؛()"]*$|$)/, 'هم');
-      }
+      // د. فعل المتكلّم في سياق فعلي → الغائب جمع المذكّر
+      const verbCtx = isFirstWord || this.VERB_LICENSERS.has(prev) || this.VERB_LICENSERS.has(prevNoConj);
+      if (verbCtx && this.isVerbToken(bare)) return this.conjugateVerbToPlural(tok);
 
-      if (bare.endsWith('اتي')) {
-         return tok.replace(/اتي(?=[.،,؛()"]*$|$)/, 'اتهم');
-      }
+      // هـ. فعل غائب متّصل بضمير المتكلّم (يفعلني/يفعلنا → يفعلهم)
+      if (/^[يت]/.test(bare) && /(ني|نا)$/.test(bare))
+        return repl(/(ني|نا)(?=[.،,؛():"«»]*$)/, 'هم');
 
-      if (bare.endsWith('تي') && bare.length > 3) {
-         const EXCLUDE_TI = new Set(['التي', 'متى', 'أنتي', 'يأتي']);
-         if (!EXCLUDE_TI.has(bare)) {
-             return tok.replace(/تي(?=[.،,؛()"]*$|$)/, 'تهم');
-         }
-      }
+      // و. ياء الملكية في الأسماء (ـي → ـهم)
+      if (this.isPossessiveYa(bare)) return repl(/ي(?=[.،,؛():"«»]*$)/, 'هم');
 
       return tok;
     }).join('');
+
+    // ز. تصحيحات تركيبية للمطابقة العددية الشائعة
+    return result.replace(/(بأنهم|أنهم|إنهم)\s+عضو\s+مهم/gu, '$1 أعضاء مهمون');
   }
 
 
@@ -556,15 +607,19 @@ export class TableCommentService {
 
     // فحص ما إذا كانت الجملة فعلية (تبدأ بفعل للغائب المذكر/المؤنث يـ/تـ)
     const firstWord = pluralized.replace(/^لا\s+/, '').split(' ')[0].replace(/[.،,؛()"]/g, '');
-    const isVerbal = /^[يت]/.test(firstWord) && firstWord.length >= 3 && 
-                     !['يوم', 'يوميا', 'يومياً', 'تأثير', 'تربية', 'تنمية', 'تعاون', 'توبيخ'].includes(firstWord);
+    const IMPERSONAL = ['يصعب', 'يوم', 'يوميا', 'يومياً', 'تأثير', 'تربية', 'تنمية', 'تعاون', 'توبيخ'];
+    const isVerbal = /^[يت]/.test(firstWord) && firstWord.length >= 3 && !IMPERSONAL.includes(firstWord);
 
     let body = pluralized;
 
     if (polarity === 'sometimes') {
         if (!isVerbal) {
              body = `يرون أحياناً أن ${pluralized}`;
+        } else if (/ون$/.test(firstWord)) {
+             // فعل مُسنَد للمستجيبين (انتهى بواو الجماعة) ← "أحياناً" بعد الفعل
+             body = body.replace(/^(\S+)/, '$1 أحياناً');
         } else {
+             // فاعل خارجي/غير شخصي ← "أحياناً" في الصدارة
              body = `أحياناً ${body}`;
         }
     } else if (polarity === 'negative') {
