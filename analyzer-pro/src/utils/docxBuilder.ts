@@ -557,7 +557,7 @@ function buildLikertTableXml(group: LikertGroupResult): string {
   // عرض الأعمدة كما في الملف النهائي:
   const numW    = 338;   // عمود م
   const countW  = 450;   // عمود ت
-  const percW   = 495;   // عمود %
+  const percW   = 620;   // عمود %
   const textW   = 8302 - numW - numLabels * (countW + percW); // عمود العبارة
 
   const gridCols = [

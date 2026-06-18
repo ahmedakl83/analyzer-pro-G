@@ -137,7 +137,13 @@ export default function QuestionConfig() {
   }, [likertGroups]);
 
   const handleProceed = useCallback(() => {
-    const range = { startIndex: demoStart, endIndex: demoEnd, multiChoiceQuestions, customAnswerOrders };
+    const range = { 
+      ...state.demographicRange,
+      startIndex: demoStart, 
+      endIndex: demoEnd, 
+      multiChoiceQuestions, 
+      customAnswerOrders 
+    };
     dispatch({
       type: 'SET_DEMOGRAPHIC_RANGE',
       payload: range,

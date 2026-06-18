@@ -142,4 +142,19 @@ export type AppAction =
   | { type: "SET_ACTIVE_TAB"; payload: AppTab }
   | { type: "SET_ACTIVE_TEMPLATE"; payload: import('./surveyFlow').SurveyTemplate | null }
   | { type: "SET_ACTIVE_SESSION"; payload: import('./surveyFlow').SurveySession | null }
-  | { type: "RESET" };
+  | { type: "RESET" }
+  | { type: "APPLY_TEMPLATE"; payload: AnalysisTemplate };
+
+// === Templates ===
+
+export interface AnalysisTemplate {
+  id: string;
+  name: string;
+  headers: string[];
+  demographicRange: DemographicRange;
+  likertGroups: LikertGroup[];
+  likertScale: LikertScale | null;
+  isGroupSurvey: boolean;
+  groupUserIdColumnIndex: number | null;
+  includeLevelTables: boolean;
+}

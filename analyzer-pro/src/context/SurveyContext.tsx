@@ -60,6 +60,17 @@ function surveyReducer(state: AppState, action: AppAction): AppState {
       return { ...state, activeSession: action.payload };
     case 'RESET':
       return initialState;
+    case 'APPLY_TEMPLATE':
+      return {
+        ...state,
+        demographicRange: action.payload.demographicRange,
+        likertGroups: action.payload.likertGroups,
+        likertScale: action.payload.likertScale,
+        isGroupSurvey: action.payload.isGroupSurvey,
+        groupUserIdColumnIndex: action.payload.groupUserIdColumnIndex,
+        includeLevelTables: action.payload.includeLevelTables,
+        currentStep: 'configure' // Send them to configure step so they can proceed and trigger calculation, or we could just leave them at configure. Let's leave at configure for review.
+      };
     default:
       return state;
   }

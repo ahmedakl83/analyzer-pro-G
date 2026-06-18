@@ -288,7 +288,19 @@ export default function LikertReview() {
       <div className="actions-bar">
         <button
           className="btn btn-secondary"
-          onClick={() => dispatch({ type: 'SET_STEP', payload: 'review-demographics' })}
+          onClick={() => {
+            const updatedScale = { labels };
+            const updatedLikertGroups = state.likertGroups.map(g => {
+              const groupDirections: Record<number, 'positive' | 'negative'> = {};
+              for (let i = g.startIndex; i <= g.endIndex; i++) {
+                groupDirections[i] = itemDirections[i] || 'positive';
+              }
+              return { ...g, itemDirections: groupDirections };
+            });
+            dispatch({ type: 'SET_LIKERT_SCALE', payload: updatedScale });
+            dispatch({ type: 'SET_LIKERT_GROUPS', payload: updatedLikertGroups });
+            dispatch({ type: 'SET_STEP', payload: 'review-demographics' });
+          }}
         >
           ⬅️ السابق
         </button>

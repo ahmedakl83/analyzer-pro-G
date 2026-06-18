@@ -5,6 +5,7 @@ import QuestionConfig from './components/QuestionConfig/QuestionConfig';
 import DemographicReview from './components/DemographicReview/DemographicReview';
 import LikertReview from './components/LikertReview/LikertReview';
 import AnalysisView from './components/Analysis/AnalysisView';
+import TemplatesManager from './components/TemplatesManager/TemplatesManager';
 import type { AppStep } from './types/survey';
 import './index.css';
 
@@ -41,6 +42,8 @@ function AppContent() {
     setIsDark(prev => !prev);
   }, []);
 
+  const [showTemplates, setShowTemplates] = useState(false);
+
   return (
     <div className="app-layout">
       {/* Header */}
@@ -58,6 +61,13 @@ function AppContent() {
               📄 {state.surveyData.fileName}
             </span>
           )}
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => setShowTemplates(true)}
+            style={{ padding: '0.4rem 0.75rem', fontWeight: 600 }}
+          >
+            ⚙️ إدارة القوالب
+          </button>
           <button
             className="theme-toggle-btn"
             onClick={toggleTheme}
@@ -111,6 +121,10 @@ function AppContent() {
         {state.currentStep === 'review-likert' && <LikertReview />}
         {state.currentStep === 'analysis' && <AnalysisView />}
       </main>
+
+      {showTemplates && (
+        <TemplatesManager onClose={() => setShowTemplates(false)} />
+      )}
 
       {/* Footer */}
       <footer className="app-footer-bar">

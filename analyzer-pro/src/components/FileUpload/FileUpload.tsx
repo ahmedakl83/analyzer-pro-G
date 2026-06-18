@@ -1,12 +1,15 @@
 import { useCallback, useRef, useState } from 'react';
 import { useSurvey } from '../../context/SurveyContext';
 import { parseFile } from '../../utils/fileParser';
+import { findMatchingTemplates } from '../../utils/templateManager';
+import type { AnalysisTemplate } from '../../types/survey';
 
 export default function FileUpload() {
   const { state, dispatch } = useSurvey();
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [matchingTemplates, setMatchingTemplates] = useState<AnalysisTemplate[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = useCallback(async (file: File) => {
@@ -24,6 +27,9 @@ export default function FileUpload() {
     try {
       const surveyData = await parseFile(file);
       dispatch({ type: 'SET_SURVEY_DATA', payload: surveyData });
+      
+      const templates = findMatchingTemplates(surveyData.headers);
+      setMatchingTemplates(templates);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'حدث خطأ أثناء قراءة الملف');
     } finally {
@@ -55,6 +61,7 @@ export default function FileUpload() {
   const handleReset = useCallback(() => {
     dispatch({ type: 'RESET' });
     setError(null);
+    setMatchingTemplates([]);
     if (inputRef.current) inputRef.current.value = '';
   }, [dispatch]);
 
@@ -108,6 +115,27 @@ export default function FileUpload() {
             <span className="alert-icon">✅</span>
             <span>تم تحميل الملف بنجاح: <strong>{state.surveyData.fileName}</strong></span>
           </div>
+
+          {matchingTemplates.length > 0 && (
+            <div className="alert alert-info" style={{ marginTop: '1rem', background: 'var(--bg-elevated)', border: '1px solid var(--accent-400)' }}>
+              <span className="alert-icon">💡</span>
+              <div style={{ flex: 1 }}>
+                <strong style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--accent-400)' }}>تم العثور على قوالب إعدادات متوافقة!</strong>
+                <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem' }}>لقد قمت مسبقاً بحفظ إعدادات لملف بنفس الهيكل. يمكنك تطبيقها لتوفير الوقت:</p>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  {matchingTemplates.map(t => (
+                    <button 
+                      key={t.id} 
+                      className="btn btn-primary btn-sm"
+                      onClick={() => dispatch({ type: 'APPLY_TEMPLATE', payload: t })}
+                    >
+                      ✨ تطبيق: {t.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="toggle-container" style={{ margin: '1rem 0' }}>
             <label className="toggle-switch">

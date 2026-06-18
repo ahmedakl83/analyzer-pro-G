@@ -379,39 +379,27 @@ export class TableCommentService {
 
   // ════════════════════════════════════════════════════════════════════════
   //  محرّك التحويل اللغوي: صياغة عبارات ليكرت بصيغة الجمع الغائب
-  //  العبارة مكتوبة بصيغة المتكلّم المفرد (أذهب) فتُحوَّل إلى الغائب جمع
-  //  المذكّر (يذهبون) مع جعل الفاعل "أفراد عينة البحث".
-  //  - إجابة "نعم"/إيجابية:  يذهبون ...
-  //  - إجابة "أحياناً":       يذهبون أحياناً ...
-  //  - إجابة "لا"/سلبية:      لا يذهبون ...
-  //  أما الجمل الاسمية/الخبرية فتُصاغ بـ "يرون أن ..." (وهي أيضاً جمع غائب).
+  //  يعتمد على التعابير النمطية ومعالجة كامل كلمات الجملة.
   // ════════════════════════════════════════════════════════════════════════
 
-  /** كلمات تبدأ بهمزة لكنها ليست أفعالاً للمتكلّم (لتفادي التحويل الخاطئ) */
+  /** كلمات تبدأ بهمزة لكنها ليست أفعالاً للمتكلّم */
   private static readonly ALIF_NON_VERBS = new Set([
     'أن', 'أنّ', 'أو', 'أي', 'أيّ', 'أحد', 'إحدى', 'أكثر', 'أغلب', 'أقل',
     'أولى', 'أول', 'آخر', 'أبرز', 'أهم', 'أنا', 'أيضاً', 'أيضا',
-    'أحياناً', 'أحيانا', 'أمام', 'أثناء'
+    'أحياناً', 'أحيانا', 'أمام', 'أثناء', 'أبدا', 'أبداً', 'أفضل', 'أسوأ', 'أحسن',
+    'أصعب', 'أسهل', 'أكبر', 'أصغر', 'أطول', 'أقصر', 'أغلى', 'أرخص', 'أسرع', 'أبطأ'
   ]);
 
-  /** خريطة ضمائر المتكلّم المفرد إلى جمع الغائب (كلمات كاملة فقط) */
+  /** خريطة ضمائر المتكلّم المفرد إلى جمع الغائب (للاستخدام المباشر للكلمات المستقلة) */
   private static readonly PRONOUN_TO_PLURAL: Record<string, string> = {
     'لي': 'لهم', 'إليّ': 'إليهم', 'إلي': 'إليهم', 'عليّ': 'عليهم', 'علي': 'عليهم',
     'عندي': 'عندهم', 'لديّ': 'لديهم', 'لدي': 'لديهم', 'معي': 'معهم', 'مني': 'منهم',
-    'بي': 'بهم', 'فيّ': 'فيهم', 'نفسي': 'أنفسهم', 'ذاتي': 'ذاتهم',
-    'منزلي': 'منزلهم', 'بيتي': 'بيتهم', 'أسرتي': 'أسرتهم', 'عائلتي': 'عائلتهم',
-    'حياتي': 'حياتهم', 'عملي': 'عملهم', 'وقتي': 'وقتهم', 'رأيي': 'رأيهم',
-    'تفضيلاتي': 'تفضيلاتهم', 'احتياجاتي': 'احتياجاتهم', 'صحتي': 'صحتهم'
-  };
-
-  /** معجم استثناءات للأفعال المعتلّة/الشاذة التي لا تنضبط بالقاعدة العامة */
-  private static readonly IRREGULAR_VERBS: Record<string, string> = {
-    'أرى': 'يرون', 'آتي': 'يأتون', 'أعي': 'يعون', 'أبغي': 'يبغون'
+    'عني': 'عنهم', 'بي': 'بهم', 'فيّ': 'فيهم', 'أنا': 'هم', 'نحن': 'هم'
   };
 
   /** هل الكلمة فعل مضارع للمتكلّم المفرد (يبدأ بهمزة قطع مفتوحة أو ممدودة)؟ */
   private static isFirstPersonVerb(word: string): boolean {
-    const w = word.replace(/[.،,؛()]/g, '').trim();
+    const w = word.replace(/[.،,؛()"]/g, '').trim();
     if (w.length < 3) return false;
     const c0 = w[0];
     if (c0 !== 'أ' && c0 !== 'آ') return false;
@@ -420,40 +408,118 @@ export class TableCommentService {
   }
 
   /** تصريف فعل المتكلّم المفرد (أَفعَل) إلى الغائب جمع المذكّر (يَفعَلون) */
-  private static conjugateToPlural(verb: string): string | null {
-    const v = verb.replace(/[.،,؛()]/g, '').trim();
-    if (v.length < 2) return null;
+  private static conjugateVerbToPlural(verb: string): string {
+    const w = verb.replace(/[.،,؛()"]/g, '').trim();
+    if (w.length < 2) return verb;
 
-    if (this.IRREGULAR_VERBS[v]) return this.IRREGULAR_VERBS[v];
+    // استخراج الضمائر المتصلة (ها، ه، هم)
+    let suffix = '';
+    let core = w;
+    if (w.endsWith('ها')) { suffix = 'ها'; core = w.slice(0, -2); }
+    else if (w.endsWith('ه')) { suffix = 'ه'; core = w.slice(0, -1); }
+    else if (w.endsWith('هم')) { suffix = 'هم'; core = w.slice(0, -2); }
+
+    const IRREGULAR: Record<string, string> = {
+      'أرى': 'يرون', 'آتي': 'يأتون', 'أعي': 'يعون', 'أبغي': 'يبغون'
+    };
+
+    if (IRREGULAR[core]) return IRREGULAR[core] + suffix;
 
     let stem: string;
-    if (v[0] === 'آ') {
-      // الهمزة الممدودة = همزتان، والجذر مهموز الفاء: آكل ← يأكل
-      stem = 'يأ' + v.slice(1);
-    } else { // يبدأ بـ أ
-      stem = 'ي' + v.slice(1);
+    if (core[0] === 'آ') {
+      stem = 'يأ' + core.slice(1);
+    } else {
+      stem = 'ي' + core.slice(1);
     }
 
-    // الأفعال الناقصة (تنتهي بحرف علّة): يُحذف حرف العلّة قبل واو الجماعة
     const last = stem[stem.length - 1];
+    let conjugated = stem + 'ون';
     if (last === 'ى' || last === 'ي' || last === 'و' || last === 'ا') {
-      return stem.slice(0, -1) + 'ون';
+      conjugated = stem.slice(0, -1) + 'ون';
     }
-    return stem + 'ون';
-  }
 
-  /** تطبيع ضمائر المتكلّم في بقية الجملة إلى جمع الغائب */
-  private static pluralizePronouns(text: string): string {
-    return text.split(/(\s+)/).map(tok => {
-      const bare = tok.replace(/[.،,؛()]/g, '');
-      const rep = this.PRONOUN_TO_PLURAL[bare];
-      return rep ? tok.replace(bare, rep) : tok;
-    }).join('');
+    const prefixPunct = verb.match(/^[.،,؛()"]+/)?.[0] || '';
+    const suffixPunct = verb.match(/[.،,؛()"]+$/)?.[0] || '';
+
+    return prefixPunct + conjugated + suffix + suffixPunct;
   }
 
   /**
-   * تصنيف قطبية الإجابة (إيجابية / أحياناً / سلبية) اعتماداً على ترتيب
-   * المقياس (مرتّب من الأعلى إيجابية إلى الأدنى) مع مراعاة اتجاه السؤال.
+   * دالة متقدمة لمعالجة وتحويل الجملة بالكامل:
+   * 1. تحويل أفعال المتكلم إلى الغائب جمع
+   * 2. تحويل الضمائر المتصلة (ني -> هم)
+   * 3. تحويل صفات الملكية (ياء المتكلم -> هم)
+   * 4. تحويل الضمائر المنفصلة
+   */
+  private static smartPluralizeArabicText(text: string): string {
+    // 1. إزالة الحشوات التعبيرية الافتتاحية
+    let processed = text.replace(/^(أرى|أجد|أعتقد|أظن)\s+أن\s+/g, '');
+
+    const words = processed.split(/(\s+)/);
+    
+    return words.map(tok => {
+      if (!tok.trim()) return tok;
+
+      const bare = tok.replace(/[.،,؛()"]/g, '');
+      if (!bare) return tok;
+
+      // 2. الضمائر المنفصلة
+      if (this.PRONOUN_TO_PLURAL[bare]) {
+        return tok.replace(bare, this.PRONOUN_TO_PLURAL[bare]);
+      }
+
+      // 3. أفعال المتكلم (أفعل -> يفعلون)
+      if (this.isFirstPersonVerb(bare)) {
+        return this.conjugateVerbToPlural(tok);
+      }
+
+      // 4. أفعال الغائب المفرد المتصلة بياء المتكلم أو نا (يفعلني/يفعلنا -> يفعلهم)
+      if (bare.startsWith('ي') && bare.match(/(ني|نا)$/)) {
+        return tok.replace(/(ني|نا)$/, 'هم');
+      }
+
+      // تحويل بعض الصفات من المفرد للجمع
+      const ADJ_MAP: Record<string, string> = {
+         'حزينا': 'حزينين', 'خائفا': 'خائفين', 'وحيدا': 'وحيدين',
+         'حزيناً': 'حزينين', 'خائفاً': 'خائفين', 'وحيداً': 'وحيدين'
+      };
+      if (ADJ_MAP[bare]) {
+        return tok.replace(bare, ADJ_MAP[bare]);
+      }
+      
+      // 5. الأسماء المتصلة بياء المتكلم (الملكية)
+      if (bare === 'والداي') return tok.replace('والداي', 'والديهم');
+      if (bare === 'والدي') return tok.replace('والدي', 'والدهم');
+
+      const POSSESSIVE_NOUNS = new Set([
+         'مشاعري', 'أغراضي', 'عملي', 'وقتي', 'رأيي', 'صديقي', 'زميلي', 'معلمي', 
+         'مديري', 'أخي', 'أختي', 'أبي', 'أمي', 'نفسي', 'ذاتي', 'حياتي', 
+         'عمري', 'خاطري', 'شؤوني', 'مستقبلي', 'بيتي', 'منزلي', 'دوري', 'ملابسي',
+         'كتبي', 'أشيائي'
+      ]);
+
+      if (POSSESSIVE_NOUNS.has(bare)) {
+         return tok.replace(/ي(?=[.،,؛()"]*$|$)/, 'هم');
+      }
+
+      if (bare.endsWith('اتي')) {
+         return tok.replace(/اتي(?=[.،,؛()"]*$|$)/, 'اتهم');
+      }
+
+      if (bare.endsWith('تي') && bare.length > 3) {
+         const EXCLUDE_TI = new Set(['التي', 'متى', 'أنتي', 'يأتي']);
+         if (!EXCLUDE_TI.has(bare)) {
+             return tok.replace(/تي(?=[.،,؛()"]*$|$)/, 'تهم');
+         }
+      }
+
+      return tok;
+    }).join('');
+  }
+
+
+  /**
+   * تصنيف قطبية الإجابة (إيجابية / أحياناً / سلبية) اعتماداً على ترتيب المقياس
    */
   private static classifyPolarity(
     label: string,
@@ -478,34 +544,44 @@ export class TableCommentService {
   }
 
   /**
-   * تحويل نص العبارة إلى مسند بصيغة الجمع الغائب حسب قطبية الإجابة.
-   * - فعلية (متكلّم): "أذهب ..." ← "يذهبون ..." / "لا يذهبون ..." / "يذهبون أحياناً ..."
-   * - اسمية/خبرية: تُصاغ بـ "يرون أن ..." (وهي أيضاً صيغة جمع غائب)
+   * تحويل نص العبارة إلى مسند بصيغة الجمع الغائب وربط القطبية بالنفي أو التكرار.
    */
+
   private static toPluralPredicate(
     cleanText: string,
     polarity: 'positive' | 'sometimes' | 'negative'
   ): string {
     const text = cleanText.replace(/\.\s*$/, '').trim();
-    const words = text.split(/\s+/);
-    const firstBare = (words[0] || '').replace(/[.،,؛()]/g, '');
+    const pluralized = this.smartPluralizeArabicText(text).trim();
 
-    // المسار (أ): فعل متكلّم ← تصريف إلى الغائب جمع المذكّر
-    if (this.isFirstPersonVerb(firstBare)) {
-      const verb = this.conjugateToPlural(firstBare);
-      if (verb) {
-        const rest = this.pluralizePronouns(words.slice(1).join(' ')).trim();
-        if (polarity === 'negative') return `لا ${verb} ${rest}`.trim();
-        if (polarity === 'sometimes') return `${verb} أحياناً ${rest}`.trim();
-        return `${verb} ${rest}`.trim();
-      }
+    // فحص ما إذا كانت الجملة فعلية (تبدأ بفعل للغائب المذكر/المؤنث يـ/تـ)
+    const firstWord = pluralized.replace(/^لا\s+/, '').split(' ')[0].replace(/[.،,؛()"]/g, '');
+    const isVerbal = /^[يت]/.test(firstWord) && firstWord.length >= 3 && 
+                     !['يوم', 'يوميا', 'يومياً', 'تأثير', 'تربية', 'تنمية', 'تعاون', 'توبيخ'].includes(firstWord);
+
+    let body = pluralized;
+
+    if (polarity === 'sometimes') {
+        if (!isVerbal) {
+             body = `يرون أحياناً أن ${pluralized}`;
+        } else {
+             body = `أحياناً ${body}`;
+        }
+    } else if (polarity === 'negative') {
+        if (!isVerbal) {
+             body = `لا يرون أن ${pluralized}`;
+        } else {
+             if (!body.startsWith('لا ') && !body.startsWith('غير ') && !body.startsWith('ليس ')) {
+                 body = `لا ${body}`;
+             }
+        }
+    } else {
+        if (!isVerbal) {
+             body = `يرون أن ${pluralized}`;
+        }
     }
 
-    // المسار (ب): جملة اسمية/خبرية ← صياغة بـ "يرون أن"
-    const body = this.pluralizePronouns(text).trim();
-    if (polarity === 'negative') return `لا يرون أن ${body}`.trim();
-    if (polarity === 'sometimes') return `يرون أحياناً أن ${body}`.trim();
-    return `يرون أن ${body}`.trim();
+    return body;
   }
 
   /**
@@ -575,17 +651,17 @@ export class TableCommentService {
       const pctStr = `(${this.toIndic(Number.isInteger(grp.percentage) ? grp.percentage.toString() : grp.percentage.toFixed(1))}%)`;
 
       const lead = is100
-        ? (index === 0 ? `يتضح من الجدول أن كافة أفراد عينة البحث ` : `، وأن كافة أفراد عينة البحث `)
-        : (index === 0 ? `يتضح من الجدول أن ${pctStr} من أفراد عينة البحث ` : `، وأن ${pctStr} منهم `);
+        ? (index === 0 ? `يتضح من الجدول: أن كافة أفراد عينة البحث ` : `، وأن كافة أفراد عينة البحث `)
+        : (index === 0 ? `يتضح من الجدول: أن ${pctStr} من أفراد عينة البحث ` : `، وأن ${pctStr} منهم `);
 
       sb.push(`${lead}${pred(grp.items[0])}`);
       for (let i = 1; i < grp.items.length; i++) {
-        sb.push(`، و${pred(grp.items[i])}`);
+        sb.push(`، وأن ${pctStr} منهم ${pred(grp.items[i])}`);
       }
     });
 
     sb.push(".");
-    return sb.join('');
+    return sb.join('').replace(/، وأن \([^)]+\) منهم ، وأن/g, '، وأن');
   }
 
   /**

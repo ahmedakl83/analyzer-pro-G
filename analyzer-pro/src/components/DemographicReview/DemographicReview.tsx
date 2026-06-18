@@ -102,7 +102,12 @@ export default function DemographicReview() {
     setOrders({ ...orders, [qIdx]: list });
   };
 
-  const handleBack = () => dispatch({ type: 'SET_STEP', payload: 'configure' });
+  const handleBack = () => {
+    // حفظ التعديلات الحالية قبل الرجوع
+    const updatedRange = { ...demographicRange!, customAnswerOrders: orders, ignoredQuestions: ignored };
+    dispatch({ type: 'SET_DEMOGRAPHIC_RANGE', payload: updatedRange });
+    dispatch({ type: 'SET_STEP', payload: 'configure' });
+  };
 
   const handleNext = () => {
     const updatedRange = { ...demographicRange!, customAnswerOrders: orders, ignoredQuestions: ignored };

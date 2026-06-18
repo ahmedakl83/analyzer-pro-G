@@ -7,7 +7,8 @@ import {
   generateLikertCommentary,
   generateOverallCommentary,
 } from '../../utils/commentaryUtils';
-import type { DemographicResult, PairedDemographicResult } from '../../types/survey';
+import { saveTemplate } from '../../utils/templateManager';
+import type { DemographicResult, PairedDemographicResult, AnalysisTemplate } from '../../types/survey';
 
 // ─── Paired Demographic Table ──────────────────────────────────────────────────
 
@@ -127,6 +128,34 @@ export default function AnalysisView() {
   const { demographicResults, pairedDemographicResults, likertResults } = state;
   const [activeTab, setActiveTab] = useState<'demographic' | 'likert'>('demographic');
   const [isExporting, setIsExporting] = useState(false);
+  const [isSavingTemplate, setIsSavingTemplate] = useState(false);
+  const [templateName, setTemplateName] = useState('');
+
+  const handleSaveTemplate = () => {
+    if (!state.surveyData || !state.demographicRange) return;
+    
+    if (templateName.trim() === '') {
+      alert('الرجاء إدخال اسم للقالب أولاً.');
+      return;
+    }
+
+    const template: AnalysisTemplate = {
+      id: `template_${Date.now()}`,
+      name: templateName.trim(),
+      headers: state.surveyData.headers,
+      demographicRange: state.demographicRange,
+      likertGroups: state.likertGroups,
+      likertScale: state.likertScale,
+      isGroupSurvey: state.isGroupSurvey,
+      groupUserIdColumnIndex: state.groupUserIdColumnIndex,
+      includeLevelTables: state.includeLevelTables,
+    };
+
+    saveTemplate(template);
+    setIsSavingTemplate(false);
+    setTemplateName('');
+    alert('تم حفظ القالب بنجاح! يمكنك استخدامه مستقبلاً مع الملفات المشابهة.');
+  };
 
 
 
@@ -210,7 +239,6 @@ export default function AnalysisView() {
           </div>
         )}
 
-        {/* Export bar */}
         <div
           style={{
             display: 'flex',
@@ -228,6 +256,36 @@ export default function AnalysisView() {
           >
             📄 تصدير Word (DOCX)
           </button>
+          
+          <div style={{ marginRight: 'auto', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {isSavingTemplate ? (
+              <>
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  style={{ padding: '0.25rem 0.5rem', fontSize: '0.85rem' }} 
+                  placeholder="اسم القالب (مثلاً: استبيان الرضا)" 
+                  value={templateName}
+                  onChange={(e) => setTemplateName(e.target.value)}
+                  autoFocus
+                />
+                <button className="btn btn-success btn-sm" onClick={handleSaveTemplate}>
+                  حفظ
+                </button>
+                <button className="btn btn-secondary btn-sm" onClick={() => setIsSavingTemplate(false)}>
+                  إلغاء
+                </button>
+              </>
+            ) : (
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => setIsSavingTemplate(true)}
+                title="حفظ هذه الإعدادات كقالب للاستخدام المستقبلي"
+              >
+                💾 حفظ الإعدادات كقالب
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
