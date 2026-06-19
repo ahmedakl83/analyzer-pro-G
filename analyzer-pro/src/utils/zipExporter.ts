@@ -48,10 +48,12 @@ export async function exportGroupToZip(
       const pairedGroups = detectPairedQuestions(userSurveyData.headers, demographicRange.startIndex, demographicRange.endIndex, demographicRange.ignoredQuestions);
       const pairedIndices = getPairedColumnIndices(pairedGroups);
 
-      userDemographics = userDemographics.filter(r => 
-        !pairedIndices.has(r.questionIndex) && 
-        r.questionIndex !== userIdColumnIndex
-      );
+      userDemographics = userDemographics
+        .map(d => ({ ...d, responses: d.responses.filter(r => r.count > 0) }))
+        .filter(r => 
+          !pairedIndices.has(r.questionIndex) && 
+          r.questionIndex !== userIdColumnIndex
+        );
 
       userPaired = analyzePairedDemographics(userSurveyData, pairedGroups);
     }
