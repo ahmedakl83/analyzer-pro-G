@@ -1,6 +1,6 @@
 [package]
 name = "analyzer-pro"
-version = "1.0.18"
+version = "1.0.25"
 description = "A Tauri App"
 authors = ["you"]
 edition = "2021"

@@ -399,7 +399,7 @@ export class TableCommentService {
     'عندما', 'حين', 'حينما', 'إذا', 'إذ', 'و', 'ف', 'ثم', 'لا', 'لم', 'لن',
     'حتى', 'كي', 'لكي', 'أن', 'بأن', 'وأن', 'ريثما', 'بينما', 'عندئذ', 'مهما',
     'كلما', 'لو', 'حيث', 'التي', 'الذي', 'الذين', 'اللاتي', 'اللذين', 'ما', 'مما', 'من',
-    'بما', 'كما', 'وما', 'فما', 'عمّا', 'عما'
+    'بما', 'كما', 'وما', 'فما', 'عمّا', 'عما', 'أو', 'أم', 'بل'
   ]);
 
   /** خريطة ضمائر المتكلّم المفرد إلى جمع الغائب (كلمات كاملة) */
@@ -434,10 +434,14 @@ export class TableCommentService {
 
   /** هل الكلمة فعل مضارع للمتكلّم المفرد (يبدأ بهمزة، وليست اسماً)؟ */
   private static isVerbToken(bare: string): boolean {
-    if (bare.length < 3) return false;
-    if (bare[0] !== 'أ' && bare[0] !== 'آ') return false;
-    if (this.ALIF_NON_VERBS.has(bare)) return false;
-    const last = bare[bare.length - 1];
+    let word = bare;
+    if ((word[0] === 'و' || word[0] === 'ف') && (word[1] === 'أ' || word[1] === 'آ')) {
+      word = word.slice(1);
+    }
+    if (word.length < 3) return false;
+    if (word[0] !== 'أ' && word[0] !== 'آ') return false;
+    if (this.ALIF_NON_VERBS.has(word)) return false;
+    const last = word[word.length - 1];
     if (last === 'ة' || last === 'ء' || last === 'ي') return false; // علامات أسماء
     return true;
   }
@@ -551,7 +555,8 @@ export class TableCommentService {
         return repl(bare, this.KANA_PRED[bare]);
 
       // د. فعل المتكلّم في سياق فعلي → الغائب جمع المذكّر
-      const verbCtx = isFirstWord || this.VERB_LICENSERS.has(prev) || this.VERB_LICENSERS.has(prevNoConj);
+      const hasConj = (bare[0] === 'و' || bare[0] === 'ف') && (bare[1] === 'أ' || bare[1] === 'آ');
+      const verbCtx = isFirstWord || hasConj || this.VERB_LICENSERS.has(prev) || this.VERB_LICENSERS.has(prevNoConj);
       if (verbCtx && this.isVerbToken(bare)) return this.conjugateVerbToPlural(tok);
 
       // هـ. فعل غائب متّصل بضمير المتكلّم (يفعلني/يفعلنا → يفعلهم)
@@ -605,34 +610,19 @@ export class TableCommentService {
     const text = cleanText.replace(/\.\s*$/, '').trim();
     const pluralized = this.smartPluralizeArabicText(text).trim();
 
-    // فحص ما إذا كانت الجملة فعلية (تبدأ بفعل للغائب المذكر/المؤنث يـ/تـ)
     const firstWord = pluralized.replace(/^لا\s+/, '').split(' ')[0].replace(/[.،,؛()"]/g, '');
-    const IMPERSONAL = ['يصعب', 'يوم', 'يوميا', 'يومياً', 'تأثير', 'تربية', 'تنمية', 'تعاون', 'توبيخ'];
-    const isVerbal = /^[يت]/.test(firstWord) && firstWord.length >= 3 && !IMPERSONAL.includes(firstWord);
 
     let body = pluralized;
 
     if (polarity === 'sometimes') {
-        if (!isVerbal) {
-             body = `يرون أحياناً أن ${pluralized}`;
-        } else if (/ون$/.test(firstWord)) {
-             // فعل مُسنَد للمستجيبين (انتهى بواو الجماعة) ← "أحياناً" بعد الفعل
+        if (/ون$/.test(firstWord)) {
              body = body.replace(/^(\S+)/, '$1 أحياناً');
         } else {
-             // فاعل خارجي/غير شخصي ← "أحياناً" في الصدارة
              body = `أحياناً ${body}`;
         }
     } else if (polarity === 'negative') {
-        if (!isVerbal) {
-             body = `لا يرون أن ${pluralized}`;
-        } else {
-             if (!body.startsWith('لا ') && !body.startsWith('غير ') && !body.startsWith('ليس ')) {
-                 body = `لا ${body}`;
-             }
-        }
-    } else {
-        if (!isVerbal) {
-             body = `يرون أن ${pluralized}`;
+        if (!body.startsWith('لا ') && !body.startsWith('غير ') && !body.startsWith('ليس ')) {
+             body = `لا ${body}`;
         }
     }
 
@@ -709,14 +699,12 @@ export class TableCommentService {
         ? (index === 0 ? `يتضح من الجدول: أن كافة أفراد عينة البحث ` : `، وأن كافة أفراد عينة البحث `)
         : (index === 0 ? `يتضح من الجدول: أن ${pctStr} من أفراد عينة البحث ` : `، وأن ${pctStr} منهم `);
 
-      sb.push(`${lead}${pred(grp.items[0])}`);
-      for (let i = 1; i < grp.items.length; i++) {
-        sb.push(`، وأن ${pctStr} منهم ${pred(grp.items[i])}`);
-      }
+      const preds = grp.items.map(q => pred(q));
+      sb.push(`${lead}${preds.join('، و')}`);
     });
 
     sb.push(".");
-    return sb.join('').replace(/، وأن \([^)]+\) منهم ، وأن/g, '، وأن');
+    return sb.join('');
   }
 
   /**

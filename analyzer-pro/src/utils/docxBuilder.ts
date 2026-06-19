@@ -1000,7 +1000,8 @@ export async function buildDocumentXml(
   demographicResults: DemographicResult[],
   pairedDemographicResults: PairedDemographicResult[],
   likertResults: LikertGroupResult[],
-  includeLevelTables: boolean = true
+  includeLevelTables: boolean = true,
+  isSplitFile: boolean = false
 ): Promise<BuildResult> {
   const charts: ChartEntry[] = [];
   let chartCounter = 1;
@@ -1035,13 +1036,15 @@ export async function buildDocumentXml(
       // الجدول
       bodyParts.push(buildDemographicTableXml(result));
 
-      // الرسم البياني
-      const cats = result.responses.map(r => r.answer);
-      const vals = result.responses.map(r => r.percentage / 100);
+      // الرسم البياني والتعقيب (استبعاد "لا إجابة" في الملفات المجزأة)
+      const chartResponses = isSplitFile ? result.responses.filter(r => r.answer !== 'لا إجابة') : result.responses;
+      const cats = chartResponses.map(r => r.answer);
+      const vals = chartResponses.map(r => r.percentage / 100);
       bodyParts.push(buildPieChartXml(chartRelId, result.question, cats, vals));
 
       // التعقيب
-      const commentary = generateDemographicCommentary(result);
+      const filteredResult = isSplitFile ? { ...result, responses: chartResponses } : result;
+      const commentary = generateDemographicCommentary(filteredResult);
       const chartRef = `وشكل (${toIndic(tableCounter)}) `;
       const PREFIXES = ['يتضح من الجدول أن ', 'يتضح من الجدول أنه ', 'أظهرت النتائج ', 'يستحوذ '];
       let body = commentary.trim();
@@ -1075,12 +1078,17 @@ export async function buildDocumentXml(
       bodyParts.push(buildPairedTableXml(result));
 
       // الرسم البياني المجمّع (Clustered Bar)
+      const chartVariants = isSplitFile ? result.variants.map(v => ({
+        ...v,
+        responses: v.responses.filter(r => r.answer !== 'لا إجابة')
+      })) : result.variants;
+
       const allAnswers = Array.from(
-        new Set(result.variants.flatMap(v => v.responses.map(r => r.answer)))
+        new Set(chartVariants.flatMap(v => v.responses.map(r => r.answer)))
       );
       const totalPerAnswer: Record<string, number> = {};
       for (const ans of allAnswers) {
-        totalPerAnswer[ans] = result.variants.reduce((sum, v) => {
+        totalPerAnswer[ans] = chartVariants.reduce((sum, v) => {
           const r = v.responses.find(r => r.answer === ans);
           return sum + (r?.count ?? 0);
         }, 0);
@@ -1090,8 +1098,8 @@ export async function buildDocumentXml(
       const chartRelId = `rId${10 + chartCounter}`;
       bodyParts.push(buildPieChartXml(chartRelId, result.baseLabel, [], []));
 
-      const chartXml = buildClusteredBarChartXml(result.baseLabel, allAnswers, result.variants);
-      const excelData = await buildExcelForPairedChart(result.baseLabel, allAnswers, result.variants);
+      const chartXml = buildClusteredBarChartXml(result.baseLabel, allAnswers, chartVariants);
+      const excelData = await buildExcelForPairedChart(result.baseLabel, allAnswers, chartVariants);
       const chartRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
   <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/package" Target="../embeddings/Microsoft_Excel_Worksheet${chartCounter}.xlsx"/>
@@ -1100,7 +1108,8 @@ export async function buildDocumentXml(
       chartCounter++;
 
       // التعقيب — قسم لكل بيان
-      const commentary = generatePairedCommentary(result, tableCounter, true);
+      const filteredPairedResult = isSplitFile ? { ...result, variants: chartVariants } : result;
+      const commentary = generatePairedCommentary(filteredPairedResult, tableCounter, true);
       for (const part of commentary.split('\n').filter(p => p.trim())) {
         bodyParts.push(commentaryPara(part.trim()));
       }
@@ -1120,11 +1129,10 @@ export async function buildDocumentXml(
 
     // تعقيب تحليلي على جدول ليكرت
     const likertCommentary = generateLikertCommentary(group);
-    const PREFIXES = ['يتضح من الجدول أن ', 'يتضح من الجدول أنه ', 'أظهرت النتائج ', 'يستحوذ '];
+    const PREFIXES = ['يتضح من الجدول: ', 'يتضح من الجدول أن ', 'يتضح من الجدول أنه ', 'أظهرت النتائج ', 'يستحوذ '];
     let body = likertCommentary.trim();
-    for (const p of PREFIXES) { if (body.startsWith(p)) { body = body.slice(p.length); break; } }
-    if (body.startsWith('أن ')) body = body.slice(3);
-    const fullCommentary = `يتضح من الجدول (${toIndic(tableCounter)}): أن ${body}`.replace(/\s{2,}/g, ' ');
+    for (const p of PREFIXES) { if (body.startsWith(p)) { body = body.slice(p.length).trim(); break; } }
+    const fullCommentary = `يتضح من الجدول (${toIndic(tableCounter)}): ${body}`.replace(/\s{2,}/g, ' ');
     bodyParts.push(commentaryPara(fullCommentary));
 
     if (includeLevelTables) {

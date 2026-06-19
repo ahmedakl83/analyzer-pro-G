@@ -3,8 +3,6 @@ import { saveAs } from 'file-saver';
 import { generateDocxBuffer } from './docxExporter';
 import {
   segmentSurveyDataByUser,
-  applyDemographicZeroValueConsistency,
-  applyPairedDemographicZeroValueConsistency,
 } from './groupAnalysisUtils';
 import { analyzeDemographics, detectPairedQuestions, analyzePairedDemographics, getPairedColumnIndices } from './demographicAnalyzer';
 import { analyzeLikertGroups } from './likertAnalyzer';
@@ -45,20 +43,17 @@ export async function exportGroupToZip(
     let userLikert: LikertGroupResult[] = [];
 
     if (demographicRange) {
-      const allRawUserDemographics = analyzeDemographics(userSurveyData, demographicRange);
+      userDemographics = analyzeDemographics(userSurveyData, demographicRange);
 
       const pairedGroups = detectPairedQuestions(userSurveyData.headers, demographicRange.startIndex, demographicRange.endIndex, demographicRange.ignoredQuestions);
       const pairedIndices = getPairedColumnIndices(pairedGroups);
 
-      const rawUserDemographics = allRawUserDemographics.filter(r => 
+      userDemographics = userDemographics.filter(r => 
         !pairedIndices.has(r.questionIndex) && 
         r.questionIndex !== userIdColumnIndex
       );
 
-      userDemographics = applyDemographicZeroValueConsistency(rawUserDemographics, globalDemographics);
-
-      const rawUserPaired = analyzePairedDemographics(userSurveyData, pairedGroups);
-      userPaired = applyPairedDemographicZeroValueConsistency(rawUserPaired, globalPaired);
+      userPaired = analyzePairedDemographics(userSurveyData, pairedGroups);
     }
 
     if (likertGroups.length > 0 && likertScale) {
@@ -68,7 +63,7 @@ export async function exportGroupToZip(
     const safeUserId = userId.replace(/[\\/*?:"<>|]/g, '_');
     const userFileName = `${safeUserId}_Analysis_Report.docx`;
 
-    const userBuffer = await generateDocxBuffer(userDemographics, userPaired, userLikert, includeLevelTables);
+    const userBuffer = await generateDocxBuffer(userDemographics, userPaired, userLikert, includeLevelTables, true);
     individualFolder.file(userFileName, userBuffer);
   }
 

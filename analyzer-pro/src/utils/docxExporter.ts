@@ -353,13 +353,15 @@ export async function generateDocxBuffer(
   demographicResults: DemographicResult[],
   pairedDemographicResults: PairedDemographicResult[],
   likertResults: LikertGroupResult[],
-  includeLevelTables: boolean = true
+  includeLevelTables: boolean = true,
+  isSplitFile: boolean = false
 ): Promise<Uint8Array> {
   const { documentXml, charts } = await buildDocumentXml(
     demographicResults,
     pairedDemographicResults,
     likertResults,
-    includeLevelTables
+    includeLevelTables,
+    isSplitFile
   );
 
   const entries: ZipEntry[] = [

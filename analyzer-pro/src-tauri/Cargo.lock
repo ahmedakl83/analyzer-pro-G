@@ -34,7 +34,7 @@ dependencies = [
 
 [[package]]
 name = "analyzer-pro"
-version = "1.0.18"
+version = "1.0.25"
 dependencies = [
  "serde",
  "serde_json",
